@@ -1,0 +1,47 @@
+.main-container {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    height: 100vh;
+    /* align-items: center; */
+    justify-content: center;
+}
+
+.calendar {
+    background-color: #ffffff;
+    padding: 1.5em;
+    border-right: 0.5px solid;
+    /* display: flex; */
+    align-items: center;
+    justify-content: center;
+}
+
+.main-content {
+    display: grid;
+    grid-template-rows: 10% 90%;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    /* border: 2px solid; */
+}
+
+.week {
+    padding: 1.5rem;
+    border: 0.5px solid;
+    display: flex;
+    justify-content: center;
+}
+
+.kanban {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    /* display: flex; */
+    justify-content: center;
+}
+
+.column {
+    padding: 1.5rem;
+    border: 0.5px solid;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+}
