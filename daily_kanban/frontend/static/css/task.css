@@ -1,7 +1,7 @@
 .task p {
     display: block;
-    background-color: black;
-    color: white;
+    /* background-color: black; */
+    color: black;
     padding: 1rem;
 }
 
@@ -21,4 +21,20 @@
 
 .column li {
     box-shadow: 2px 2px 11px rgba(0, 0, 0, 0.6);
+}
+
+.task.backlog {
+    background-color: #e3d2d1;
+}
+
+.task.today {
+    background-color: #e9b3b3;
+}
+
+.task.in-progress {
+    background-color: #aedae6;
+}
+
+.task.done {
+    background-color: #a6d4c5;
 }
