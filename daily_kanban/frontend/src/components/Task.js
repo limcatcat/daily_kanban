@@ -1,23 +1,32 @@
 import React from 'react';
 import '../../static/css/task.css'
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
-function Task(props) {
+
+function Task({id, description, status}) {
+
+    const {attributes, listeners, setNodeRef, transform, transition} = useSortable({id});
+
+    const style = {
+        transition,
+        transform: CSS.Transform.toString(transform),
+    };
 
     let taskStatus = '';
     
-    if (props.status == 'Backlog')
+    if (status == 'Backlog')
         taskStatus = 'backlog'
-    else if (props.status == 'Today')
+    else if (status == 'Today')
         taskStatus = 'today'
-    else if (props.status == 'In Progress')
+    else if (status == 'In Progress')
         taskStatus = 'in-progress'
-    else if (props.status == 'Done')
+    else if (status == 'Done')
         taskStatus = 'done'
-
-
+    
     return (
-        <div className={`task ${taskStatus}`}>
-            <p>{props.description}</p>
+        <div className={`task ${taskStatus}`} style={style} ref={setNodeRef} {...attributes} {...listeners}>
+            {description}
         </div>
     );
 }
