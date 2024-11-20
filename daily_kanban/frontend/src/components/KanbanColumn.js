@@ -1,20 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Task from './Task';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 
 
-function KanbanColumn({title, tasks}) {
+function KanbanColumn({title, tasks, status, setTasks}) {
+
+    const tasksByStatus = tasks.filter(task => task.status === status);
 
     return (
         <div className='column'>
-            <SortableContext items={tasks} strategy={verticalListSortingStrategy}>
+            <SortableContext items={tasksByStatus.map(task => task.id)} strategy={verticalListSortingStrategy}>
             <h3>{title}</h3>
            
-
-                    {tasks.map(task => (
-                        <Task id={task.id} key={task.id} description={task.description} status={task.status} />
-                    ))}
-                
+                {tasksByStatus.map(task => (
+                    <Task id={task.id} key={task.id} description={task.description} status={task.status}/>
+                ))}             
             </SortableContext>
         </div>
     );

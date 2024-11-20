@@ -8,6 +8,10 @@
     touch-action: none;
 }
 
+.task:active {
+    cursor: grabbing;
+}
+
 .column h3 {
     display: block;
     /* justify-content: center; */

@@ -4,7 +4,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
 
-function Task({id, description, status}) {
+function Task({id, description, status, handleDragStart}) {
 
     const {attributes, listeners, setNodeRef, transform, transition} = useSortable({id});
 
@@ -25,9 +25,11 @@ function Task({id, description, status}) {
         taskStatus = 'done'
     
     return (
-        <div className={`task ${taskStatus}`} style={style} ref={setNodeRef} {...attributes} {...listeners}>
-            {description}
-        </div>
+        <>
+            <div className={`task ${taskStatus}`} style={style} ref={setNodeRef} {...attributes} {...listeners} onDragStart={e => handleDragStart(e, {id, description, status})}>
+                {description}
+            </div>
+        </>
     );
 }
 

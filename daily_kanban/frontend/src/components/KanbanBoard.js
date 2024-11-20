@@ -34,26 +34,48 @@ function KanbanBoard() {
 
     const [tasks, setTasks] = useState(testTasks);
 
-    const tasksByStatus = {
-        today: tasks.filter(task => task.status == 'Today'),
-        in_progress: tasks.filter(task => task.status == 'In Progress'),
-        done: tasks.filter(task => task.status == 'Done')
-    };
+    // const tasksByStatus = {
+    //     today: tasks.filter(task => task.status == 'Today'),
+    //     in_progress: tasks.filter(task => task.status == 'In Progress'),
+    //     done: tasks.filter(task => task.status == 'Done')
+    // };
 
-    const getTaskPos = id => tasks.findIndex(task => task.id === id)
+    const handleDragEnd = e => {
+        const {active, over} = e;
 
-    const handleDragEnd = event => {
-        const {active, over} = event
+        if(!over || active.id === over.id) return;
 
-        if(active.id === over.id) return;
+        setTasks(prevTasks => {
 
-        setTasks(tasks => {
-            const originalPos = getTaskPos(active.id)
-            const newPos = getTaskPos(over.id)
+            const activeTaskIndex = prevTasks.findIndex(task => task.id === active.id);
+            const overTaskIndex = prevTasks.findIndex(task => task.id === over.id);
 
-            return arrayMove(tasks, originalPos, newPos)
+            if (activeTaskIndex === -1 || overTaskIndex === -1) return prevTasks;
+
+            const activeTask = prevTasks[activeTaskIndex];
+            const overTask = prevTasks[overTaskIndex];
+
+            if (activeTask.status === overTask.status) {
+
+                const filteredTasks = prevTasks.filter(task => task.status === activeTask.status);
+                const activeReIndex =filteredTasks.findIndex(task => task.id === active.id);
+                const overReIndex = filteredTasks.findIndex(task => task.id === over.id);
+
+                const reorderedTasks = arrayMove(
+                    filteredTasks, activeReIndex, overReIndex
+                );
+
+                return [
+                    ...prevTasks.filter(task => task.status !== activeTask.status),
+                    ...reorderedTasks
+                ];
+            }
+
+            return prevTasks.map(task => task.id === active.id ? {...task, status: overTask.status} : task);
+
         });
     };
+
 
     const sensors = useSensors(
         useSensor(PointerSensor),
@@ -65,9 +87,9 @@ function KanbanBoard() {
         <div className='kanban'>
             <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
 
-                <KanbanColumn className='column' title='Today' tasks={tasksByStatus.today} />
-                <KanbanColumn className='column' title='In Progress' tasks={tasksByStatus.in_progress} />
-                <KanbanColumn className='column' title='Done' tasks={tasksByStatus.done} />
+                <KanbanColumn className='column' title='Today' status='Today' tasks={tasks} setTasks={setTasks} />
+                <KanbanColumn className='column' title='In Progress' status='In Progress' tasks={tasks} setTasks={setTasks} />
+                <KanbanColumn className='column' title='Done' status='Done' tasks={tasks} setTasks={setTasks} />
 
             </DndContext>
         </div>
