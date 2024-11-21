@@ -4,14 +4,14 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
 
-function Task({id, description, status, handleDragStart, activeId, isDragging}) {
+function Task({id, description, status, handleDragStart, isDragging}) {
 
     const {attributes, listeners, setNodeRef, transform, transition} = useSortable({id});
 
     // const isDragging = id === activeId;
 
     const style = {
-        transition,
+        transition: transition || 'transform 200ms ease',
         transform: CSS.Transform.toString(transform),
     };
 

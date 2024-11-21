@@ -6,6 +6,7 @@
     padding: 1rem;
     margin-bottom: 1rem;
     touch-action: none;
+    transition: transform 200ms ease;
 }
 
 .task:active {
