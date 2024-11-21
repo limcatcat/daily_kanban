@@ -1,8 +1,9 @@
 import React from 'react';
 import KanbanColumn from './KanbanColumn';
-import { closestCorners, DndContext, KeyboardSensor, PointerSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { DndContext, DragOverlay, KeyboardSensor, PointerSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { useState } from 'react';
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
+import Task from './Task';
 
 
 const testTasks = [
@@ -33,6 +34,7 @@ const testTasks = [
 function KanbanBoard() {
 
     const [tasks, setTasks] = useState(testTasks);
+    const [activeId, setActiveId] = useState(null);
 
     // const tasksByStatus = {
     //     today: tasks.filter(task => task.status == 'Today'),
@@ -40,40 +42,61 @@ function KanbanBoard() {
     //     done: tasks.filter(task => task.status == 'Done')
     // };
 
+    const handleDragStart = e => {
+        setActiveId(e.active.id);
+        // console.log(`Dragging started with activeId: ${e.active.id}`);     
+    }
+
     const handleDragEnd = e => {
         const {active, over} = e;
+        // console.log(`Dragging ended with activeId: ${active.id}`);
+        
 
-        if(!over || active.id === over.id) return;
+        
+        if(!over || active.id === over.id) {
+            setActiveId(null);
+            return;
+        }
 
         setTasks(prevTasks => {
 
             const activeTaskIndex = prevTasks.findIndex(task => task.id === active.id);
-            const overTaskIndex = prevTasks.findIndex(task => task.id === over.id);
-
-            if (activeTaskIndex === -1 || overTaskIndex === -1) return prevTasks;
-
             const activeTask = prevTasks[activeTaskIndex];
-            const overTask = prevTasks[overTaskIndex];
+            
+            // const overTaskIndex = prevTasks.findIndex(task => task.id === over.id);
+            // const overTask = prevTasks[overTaskIndex];
 
-            if (activeTask.status === overTask.status) {
+            // if (activeTaskIndex === -1 || overTaskIndex === -1) return prevTasks;
 
-                const filteredTasks = prevTasks.filter(task => task.status === activeTask.status);
-                const activeReIndex =filteredTasks.findIndex(task => task.id === active.id);
-                const overReIndex = filteredTasks.findIndex(task => task.id === over.id);
+            if (!activeTask) return prevTasks;
 
-                const reorderedTasks = arrayMove(
-                    filteredTasks, activeReIndex, overReIndex
-                );
+            const overTask = prevTasks.find(task => task.id === over.id);
+            const overColumn = overTask ? overTask.status : over.id;
+
+
+            if (activeTask.status === overColumn) {
+                // Reorder tasks within the same column
+                const tasksInSameColumn = prevTasks.filter(task => task.status === overColumn);
+                const activeIndexInColumn = tasksInSameColumn.findIndex(task => task.id === active.id);
+                const overIndexInColumn = tasksInSameColumn.findIndex(task => task.id === over.id);
+
+                const reorderedTasksInColumn = arrayMove(tasksInSameColumn, activeIndexInColumn, overIndexInColumn);
 
                 return [
-                    ...prevTasks.filter(task => task.status !== activeTask.status),
-                    ...reorderedTasks
+                    ...prevTasks.filter(task => task.status !== overColumn),
+                    ...reorderedTasksInColumn,
                 ];
+            } else {
+                // Move task to a different column
+                return prevTasks.map(task =>
+                    task.id === active.id ? { ...task, status: overColumn } : task
+                );
             }
 
-            return prevTasks.map(task => task.id === active.id ? {...task, status: overTask.status} : task);
-
         });
+        
+        setActiveId(null);
+    
     };
 
 
@@ -83,13 +106,31 @@ function KanbanBoard() {
         useSensor(KeyboardSensor, {coordinateGetter: sortableKeyboardCoordinates})
     );
 
+
     return (
         <div className='kanban'>
-            <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+            <DndContext
+                sensors={sensors}
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}    
+            >
 
-                <KanbanColumn className='column' title='Today' status='Today' tasks={tasks} setTasks={setTasks} />
-                <KanbanColumn className='column' title='In Progress' status='In Progress' tasks={tasks} setTasks={setTasks} />
-                <KanbanColumn className='column' title='Done' status='Done' tasks={tasks} setTasks={setTasks} />
+                <KanbanColumn className='column' title='Today' status='Today' tasks={tasks} setTasks={setTasks} activeId={activeId} />
+                <KanbanColumn className='column' title='In Progress' status='In Progress' tasks={tasks} setTasks={setTasks} activeId={activeId} />
+                <KanbanColumn className='column' title='Done' status='Done' tasks={tasks} setTasks={setTasks} activeId={activeId} />
+
+                <DragOverlay>
+                    {
+                        activeId ? (
+                            <Task 
+                                id={activeId}
+                                description={tasks.find(task => task.id === activeId)?.description}
+                                status={tasks.find(task => task.id === activeId)?.status}
+                                className='task dragging'
+                            />
+                        ) : null
+                    }
+                </DragOverlay>
 
             </DndContext>
         </div>
