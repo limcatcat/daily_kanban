@@ -12,6 +12,7 @@
     cursor: grabbing;
 }
 
+
 .column h3 {
     display: block;
     /* justify-content: center; */
@@ -40,4 +41,10 @@
 
 .task.done {
     background-color: #a6d4c5;
+
+}
+
+.task.dragging {
+    opacity: 0;
+    pointer-events: none;
 }
