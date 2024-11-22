@@ -23,7 +23,7 @@ function KanbanColumn({title, tasks, status, activeId}) {
             ref={setNodeRef} className='column'
             style={columnStyle}
             onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'aliceblue')}
-            onMouseLeave={e => (e.currentTarget.style.backgroundColor = isOver ? 'lightblue' : 'white')}
+            onMouseLeave={e => (e.currentTarget.style.backgroundColor = isOver ? '#efdff0' : 'white')}
             >
             <SortableContext items={tasksByStatus.map(task => task.id)} strategy={verticalListSortingStrategy}>
                 <h3>{title}</h3>
