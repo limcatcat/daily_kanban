@@ -9,10 +9,27 @@
 .calendar {
     background-color: #ffffff;
     padding: 1.5em;
-    border-right: 0.5px solid;
-    /* display: flex; */
-    align-items: center;
+    /* border-right: 0.5px solid; */
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    /* justify-content: center; */
+}
+
+.show-backlog {
+    display: flex;
     justify-content: center;
+    margin: 2rem;
+    font-weight: bold;
+    color: black;
+}
+
+.show-calendar {
+    display: flex;
+    justify-content: center;
+    margin: 2rem;
+    font-weight: bold;
+    color: black;
 }
 
 .main-content {
@@ -24,10 +41,13 @@
 }
 
 .week {
-    padding: 1.5rem;
-    border: 0.5px solid;
+    padding-top: 1rem;
+    padding-bottom: 0.5rem;
+    /* border: 0.5px solid;
+    border-radius: 5px; */
     display: flex;
     justify-content: center;
+    flex-direction: row;
 }
 
 .kanban {
@@ -40,8 +60,8 @@
 
 .column {
     padding: 1.5rem;
-    border: 0.5px solid;
-    border-radius: 5px;
+    /* border: 0.5px solid;
+    border-radius: 5px; */
     /* display: flex; */
     justify-content: center;
 }

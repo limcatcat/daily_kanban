@@ -4,36 +4,48 @@ import { DndContext, DragOverlay, KeyboardSensor, PointerSensor, TouchSensor, us
 import { useState } from 'react';
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import Task from './Task';
+import { useTaskContext } from '../context/TaskContext';
 
 
-const testTasks = [
-    {
-        id: 1,
-        description: "Quokka Princess",
-        status: "Today"
-    },
-    {
-        id: 2,
-        description: "Quokka Baby Pug",
-        status: "In Progress"
-    },
-    {
-        id: 3,
-        description: "Quokka Angel",
-        status: "Done"
-    },
-    {
-        id: 4,
-        description: "Quokka Bawinuguri",
-        status: "Today"
-    }
+// const testTasks = [
+//     {
+//         id: 1,
+//         description: "Quokka Princess",
+//         status: "Today"
+//     },
+//     {
+//         id: 2,
+//         description: "Quokka Baby Pug",
+//         status: "In Progress"
+//     },
+//     {
+//         id: 3,
+//         description: "Quokka Angel",
+//         status: "Done"
+//     },
+//     {
+//         id: 4,
+//         description: "Quokka Bawinuguri",
+//         status: "Today"
+//     },
+//     {
+//         id: 5,
+//         description: "Quokka Backlog 1",
+//         status: "Backlog"
+//     },
+//     {
+//         id: 6,
+//         description: "Quokka Backlog 2",
+//         status: "Backlog"
+//     },
 
-]
+// ]
 
 
 function KanbanBoard() {
 
-    const [tasks, setTasks] = useState(testTasks);
+    // const [tasks, setTasks] = useState(testTasks);
+    const { tasks, setTasks } = useTaskContext();
     const [activeId, setActiveId] = useState(null);
 
     // const tasksByStatus = {
@@ -115,9 +127,9 @@ function KanbanBoard() {
                 onDragEnd={handleDragEnd}    
             >
 
-                <KanbanColumn className='column' title='Today' status='Today' tasks={tasks} setTasks={setTasks} activeId={activeId} />
-                <KanbanColumn className='column' title='In Progress' status='In Progress' tasks={tasks} setTasks={setTasks} activeId={activeId} />
-                <KanbanColumn className='column' title='Done' status='Done' tasks={tasks} setTasks={setTasks} activeId={activeId} />
+                <KanbanColumn className='column' title='Today' status='Today' activeId={activeId} />
+                <KanbanColumn className='column' title='In Progress' status='In Progress' activeId={activeId} />
+                <KanbanColumn className='column' title='Done' status='Done' activeId={activeId} />
 
                 <DragOverlay>
                     {
