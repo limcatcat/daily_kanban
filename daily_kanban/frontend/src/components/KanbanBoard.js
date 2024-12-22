@@ -5,6 +5,8 @@ import { useState } from 'react';
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import Task from './Task';
 import { useTaskContext } from '../context/TaskContext';
+import Cal from './Calendar';
+import Calendar from 'react-calendar';
 
 
 // const testTasks = [
@@ -42,11 +44,13 @@ import { useTaskContext } from '../context/TaskContext';
 // ]
 
 
-function KanbanBoard({ showBacklog }) {
+function KanbanBoard() {
 
     // const [tasks, setTasks] = useState(testTasks);
     const { tasks, setTasks } = useTaskContext();
     const [activeId, setActiveId] = useState(null);
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [showBacklog, setShowBacklog] = useState(true);
 
     // const tasksByStatus = {
     //     today: tasks.filter(task => task.status == 'Today'),
@@ -127,6 +131,37 @@ function KanbanBoard({ showBacklog }) {
                 onDragEnd={handleDragEnd}    
             >
 
+{showBacklog ? (
+                        <div className='backlog-column'>
+                            <KanbanColumn 
+                                className='column'
+                                title='Backlog'
+                                status='Backlog'
+                                />
+                            <a href="" className='show-calendar'
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setShowBacklog(false);
+                            }}>
+                            show Calendar</a>
+                            
+                        </div> 
+
+                    ):(
+                        <div className='backlog-column'>
+                            {/* <h1>Calendar</h1> */}
+                            
+                            <Calendar onChange={setSelectedDate}/>
+                            <a href="" className='show-backlog'
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setShowBacklog(true);
+                            }}
+                            >
+                            show Backlog</a>
+                            
+                        </div> 
+                    )}
                 <KanbanColumn className='column' title='Today' status='Today' activeId={activeId} />
                 <KanbanColumn className='column' title='In Progress' status='In Progress' activeId={activeId} />
                 <KanbanColumn className='column' title='Done' status='Done' activeId={activeId} />
