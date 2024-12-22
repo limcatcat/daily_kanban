@@ -2,27 +2,33 @@ import React, { useState } from 'react';
 import Cal from './Calendar';
 import Calendar from 'react-calendar';
 import KanbanBoard from './KanbanBoard';
+import WeekView from './WeekView';
+import KanbanColumn from './KanbanColumn';
+import { TaskProvider } from "../context/TaskContext.js"
+
 
 function App() {
 
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    // const [showBacklog, setShowBacklog] = useState(true);
+
     return(
-        <div className='main-container'>
-            <div className='calendar'>
-                {/* <h1>Calendar</h1> */}
-                <Calendar />
+        <TaskProvider>
 
-            </div>
-
-            <div className='main-content'>
+            <div className='main-container'>
                 <div className='week'>
-                    <h3>Week</h3>
+                    <WeekView selectedDate={selectedDate} />
                 </div>
-             
-                <KanbanBoard />
-            
+                        
+                <div className='main-content'>
+              
+                    <KanbanBoard setSelectedDate={setSelectedDate} />
+                
+                </div>
             </div>
-        </div>
-    )
+
+        </TaskProvider>
+    );
     
 }
 

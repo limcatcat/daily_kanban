@@ -4,37 +4,52 @@ import { DndContext, DragOverlay, KeyboardSensor, PointerSensor, TouchSensor, us
 import { useState } from 'react';
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import Task from './Task';
+import { useTaskContext } from '../context/TaskContext';
+import Cal from './Calendar';
+import Calendar from 'react-calendar';
 
 
-const testTasks = [
-    {
-        id: 1,
-        description: "Quokka Princess",
-        status: "Today"
-    },
-    {
-        id: 2,
-        description: "Quokka Baby Pug",
-        status: "In Progress"
-    },
-    {
-        id: 3,
-        description: "Quokka Angel",
-        status: "Done"
-    },
-    {
-        id: 4,
-        description: "Quokka Bawinuguri",
-        status: "Today"
-    }
+// const testTasks = [
+//     {
+//         id: 1,
+//         description: "Quokka Princess",
+//         status: "Today"
+//     },
+//     {
+//         id: 2,
+//         description: "Quokka Baby Pug",
+//         status: "In Progress"
+//     },
+//     {
+//         id: 3,
+//         description: "Quokka Angel",
+//         status: "Done"
+//     },
+//     {
+//         id: 4,
+//         description: "Quokka Bawinuguri",
+//         status: "Today"
+//     },
+//     {
+//         id: 5,
+//         description: "Quokka Backlog 1",
+//         status: "Backlog"
+//     },
+//     {
+//         id: 6,
+//         description: "Quokka Backlog 2",
+//         status: "Backlog"
+//     },
 
-]
+// ]
 
 
-function KanbanBoard() {
+function KanbanBoard({setSelectedDate}) {
 
-    const [tasks, setTasks] = useState(testTasks);
+    // const [tasks, setTasks] = useState(testTasks);
+    const { tasks, setTasks } = useTaskContext();
     const [activeId, setActiveId] = useState(null);
+    const [showBacklog, setShowBacklog] = useState(true);
 
     // const tasksByStatus = {
     //     today: tasks.filter(task => task.status == 'Today'),
@@ -115,9 +130,41 @@ function KanbanBoard() {
                 onDragEnd={handleDragEnd}    
             >
 
-                <KanbanColumn className='column' title='Today' status='Today' tasks={tasks} setTasks={setTasks} activeId={activeId} />
-                <KanbanColumn className='column' title='In Progress' status='In Progress' tasks={tasks} setTasks={setTasks} activeId={activeId} />
-                <KanbanColumn className='column' title='Done' status='Done' tasks={tasks} setTasks={setTasks} activeId={activeId} />
+{showBacklog ? (
+                        <div className='backlog-column'>
+                            <KanbanColumn 
+                                className='column'
+                                title='Backlog'
+                                status='Backlog'
+                                />
+                            <a href="" className='show-calendar'
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setShowBacklog(false);
+                            }}>
+                            show Calendar</a>
+                            
+                        </div> 
+
+                    ):(
+                        <div className='backlog-column'>
+                            {/* <h1>Calendar</h1> */}
+                            
+                            <Calendar onChange={(date) => setSelectedDate(date)}/>
+                            <a href="" className='show-backlog'
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setShowBacklog(true);
+                            }}
+                            >
+                            show Backlog</a>
+                            
+                        </div> 
+                    )}
+                <KanbanColumn className='column' title='Today' status='Today' activeId={activeId} />
+                <KanbanColumn className='column' title='In Progress' status='In Progress' activeId={activeId} />
+                <KanbanColumn className='column' title='Done' status='Done' activeId={activeId} />
+
 
                 <DragOverlay>
                     {

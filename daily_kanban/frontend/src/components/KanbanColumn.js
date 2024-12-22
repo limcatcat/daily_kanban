@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import Task from './Task';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useDroppable } from '@dnd-kit/core';
+import { useTaskContext } from '../context/TaskContext';
 
 
-function KanbanColumn({title, tasks, status, activeId}) {
+function KanbanColumn({title, status, activeId}) {
+
+    const { tasks } = useTaskContext();
 
     const tasksByStatus = tasks.filter(task => task.status === status);
 

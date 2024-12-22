@@ -1,0 +1,34 @@
+.week-view {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+
+.day-container {
+    /* border: 1px solid #ccc;
+    border-radius: 5px; */
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+.day {
+    /* padding-left: 0.2rem;
+    padding-right: 0.2rem; */
+    margin-bottom: 1.5rem;
+    margin-top: 0;
+}
+
+
+.weekday {
+    text-align: center;
+}
+
+.is-today {
+    color: #006241;
+    font-weight: bold;
+}
+

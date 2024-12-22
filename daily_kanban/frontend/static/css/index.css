@@ -1,6 +1,7 @@
 .main-container {
     display: grid;
-    grid-template-columns: 300px 1fr;
+    /* grid-template-columns: 300px 1fr; */
+    grid-template-rows: 10% 90%;
     height: 100vh;
     /* align-items: center; */
     justify-content: center;
@@ -9,10 +10,32 @@
 .calendar {
     background-color: #ffffff;
     padding: 1.5em;
-    border-right: 0.5px solid;
-    /* display: flex; */
-    align-items: center;
+    /* border-right: 0.5px solid; */
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    /* justify-content: center; */
+}
+
+.backlog-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.show-backlog {
+    display: flex;
     justify-content: center;
+    margin: 2rem;
+    font-weight: bold;
+    color: black;
+}
+
+.show-calendar {
+    display: flex;
+    justify-content: center;
+    margin: 2rem;
+    font-weight: bold;
+    color: black;
 }
 
 .main-content {
@@ -24,26 +47,31 @@
 }
 
 .week {
-    padding: 1.5rem;
-    border: 0.5px solid;
+    padding-top: 1rem;
+    padding-bottom: 0.5rem;
+    /* border: 0.5px solid;
+    border-radius: 5px; */
     display: flex;
     justify-content: center;
+    flex-direction: row;
 }
 
 .kanban {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    grid-template-columns: repeat(4, minmax(20rem, 1fr));
+    gap: 1.5rem;
     /* display: flex; */
     justify-content: center;
+    align-items: start;
 }
 
 .column {
-    padding: 1.5rem;
-    border: 0.5px solid;
-    border-radius: 5px;
-    /* display: flex; */
-    justify-content: center;
+    padding: 1rem;
+    /* border: 0.5px solid;
+    border-radius: 5px; */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
 }
 
 .column:hover {
