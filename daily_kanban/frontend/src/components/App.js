@@ -5,11 +5,11 @@ import KanbanBoard from './KanbanBoard';
 import WeekView from './WeekView';
 import KanbanColumn from './KanbanColumn';
 import { TaskProvider } from "../context/TaskContext.js"
+import { DndContext } from '@dnd-kit/core';
 
 function App() {
 
     const [selectedDate, setSelectedDate] = useState(new Date());
-
     const [showBacklog, setShowBacklog] = useState(false);
 
     return(
@@ -54,7 +54,7 @@ function App() {
                                 <WeekView selectedDate={selectedDate} />
                             </div>
                 
-                    <KanbanBoard />
+                    <KanbanBoard showBacklog={showBacklog} />
                 
                 </div>
             </div>

@@ -42,7 +42,7 @@ import { useTaskContext } from '../context/TaskContext';
 // ]
 
 
-function KanbanBoard() {
+function KanbanBoard({ showBacklog }) {
 
     // const [tasks, setTasks] = useState(testTasks);
     const { tasks, setTasks } = useTaskContext();
@@ -130,6 +130,7 @@ function KanbanBoard() {
                 <KanbanColumn className='column' title='Today' status='Today' activeId={activeId} />
                 <KanbanColumn className='column' title='In Progress' status='In Progress' activeId={activeId} />
                 <KanbanColumn className='column' title='Done' status='Done' activeId={activeId} />
+
 
                 <DragOverlay>
                     {
