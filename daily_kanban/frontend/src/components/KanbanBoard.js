@@ -44,12 +44,11 @@ import Calendar from 'react-calendar';
 // ]
 
 
-function KanbanBoard() {
+function KanbanBoard({setSelectedDate}) {
 
     // const [tasks, setTasks] = useState(testTasks);
     const { tasks, setTasks } = useTaskContext();
     const [activeId, setActiveId] = useState(null);
-    const [selectedDate, setSelectedDate] = useState(new Date());
     const [showBacklog, setShowBacklog] = useState(true);
 
     // const tasksByStatus = {
@@ -151,7 +150,7 @@ function KanbanBoard() {
                         <div className='backlog-column'>
                             {/* <h1>Calendar</h1> */}
                             
-                            <Calendar onChange={setSelectedDate}/>
+                            <Calendar onChange={(date) => setSelectedDate(date)}/>
                             <a href="" className='show-backlog'
                             onClick={(e) => {
                                 e.preventDefault();

@@ -22,7 +22,7 @@ function App() {
                         
                 <div className='main-content'>
               
-                    <KanbanBoard />
+                    <KanbanBoard setSelectedDate={setSelectedDate} />
                 
                 </div>
             </div>
