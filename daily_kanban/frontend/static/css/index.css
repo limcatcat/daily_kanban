@@ -20,16 +20,10 @@
 .backlog-column {
     display: flex;
     flex-direction: column;
+    width: 100%;
 }
 
-.show-backlog {
-    display: flex;
-    justify-content: center;
-    margin: 2rem;
-    font-weight: bold;
-    color: black;
-}
-
+.show-backlog,
 .show-calendar {
     display: flex;
     justify-content: center;
@@ -40,10 +34,11 @@
 
 .main-content {
     display: grid;
-    grid-template-rows: 10% 90%;
+    /* grid-template-rows: 10% 90%; */
     gap: 0.5rem;
     padding: 0.5rem;
     /* border: 2px solid; */
+    font-family: inherit;
 }
 
 .week {
@@ -58,7 +53,7 @@
 
 .kanban {
     display: grid;
-    grid-template-columns: repeat(4, minmax(20rem, 1fr));
+    grid-template-columns: 25% repeat(3, minmax(20rem, 1fr));
     gap: 1.5rem;
     /* display: flex; */
     justify-content: center;
