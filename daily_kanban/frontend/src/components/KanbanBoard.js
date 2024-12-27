@@ -64,6 +64,8 @@ function KanbanBoard({setSelectedDate}) {
 
     const handleDragEnd = e => {
         const {active, over} = e;
+        console.log('over object:', over);
+        
         // console.log(`Dragging ended with activeId: ${active.id}`);
         
 
@@ -72,6 +74,7 @@ function KanbanBoard({setSelectedDate}) {
             setActiveId(null);
             return;
         }
+
 
         setTasks(prevTasks => {
 
@@ -88,28 +91,55 @@ function KanbanBoard({setSelectedDate}) {
             const overTask = prevTasks.find(task => task.id === over.id);
             const overColumn = overTask ? overTask.status : over.id;
 
+            // const overColumn = over?.data?.current?.title;
+            // console.log('Drag ended:', {activeId: active.id, overColumn});
+            
+            if (!overColumn) return prevTasks;
+
 
             if (activeTask.status === overColumn) {
                 // Reorder tasks within the same column
                 const tasksInSameColumn = prevTasks.filter(task => task.status === overColumn);
                 const activeIndexInColumn = tasksInSameColumn.findIndex(task => task.id === active.id);
                 const overIndexInColumn = tasksInSameColumn.findIndex(task => task.id === over.id);
-
+                
                 const reorderedTasksInColumn = arrayMove(tasksInSameColumn, activeIndexInColumn, overIndexInColumn);
-
+                
                 return [
                     ...prevTasks.filter(task => task.status !== overColumn),
                     ...reorderedTasksInColumn,
                 ];
             } else {
                 // Move task to a different column
-                return prevTasks.map(task =>
-                    task.id === active.id ? { ...task, status: overColumn } : task
+                const updatedTasks = prevTasks.map(task =>
+                    task.id === active.id ? { ...task, status: parseInt(overColumn) } : task
                 );
-            }
 
-        });
+                const csrftoken = document.querySelector('[name=csrf-token]').content;
+                
+                fetch(`/tasks/${active.id}/update-status/`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-type': 'application/json',
+                        'X-CSRFToken': csrftoken,
+                    },
+                    body: JSON.stringify({status: overColumn}),
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            console.error('Failed to update task status');
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+                
+                    
+                console.log('updated tasks:', updatedTasks);
+                    
+                return updatedTasks;
+            }    
         
+        });
+          
         setActiveId(null);
     
     };
@@ -135,7 +165,7 @@ function KanbanBoard({setSelectedDate}) {
                             <KanbanColumn 
                                 className='column'
                                 title='Backlog'
-                                status='Backlog'
+                                status='0'
                                 />
                             <a href="" className='show-calendar'
                             onClick={(e) => {
@@ -144,6 +174,7 @@ function KanbanBoard({setSelectedDate}) {
                             }}>
                             show Calendar</a>
                             
+                            {/* {console.log(tasks)}; */}
                         </div> 
 
                     ):(
@@ -161,9 +192,9 @@ function KanbanBoard({setSelectedDate}) {
                             
                         </div> 
                     )}
-                <KanbanColumn className='column' title='Today' status='Today' activeId={activeId} />
-                <KanbanColumn className='column' title='In Progress' status='In Progress' activeId={activeId} />
-                <KanbanColumn className='column' title='Done' status='Done' activeId={activeId} />
+                <KanbanColumn className='column' title='Today' status='1' activeId={activeId} />
+                <KanbanColumn className='column' title='In Progress' status='2' activeId={activeId} />
+                <KanbanColumn className='column' title='Done' status='3' activeId={activeId} />
 
 
                 <DragOverlay>

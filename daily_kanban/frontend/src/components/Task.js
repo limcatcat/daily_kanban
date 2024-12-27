@@ -17,13 +17,13 @@ function Task({id, description, status, handleDragStart, isDragging}) {
 
     let taskStatus = '';
     
-    if (status == 'Backlog')
+    if (status == '0')
         taskStatus = 'backlog'
-    else if (status == 'Today')
+    else if (status == '1')
         taskStatus = 'today'
-    else if (status == 'In Progress')
+    else if (status == '2')
         taskStatus = 'in-progress'
-    else if (status == 'Done')
+    else if (status == '3')
         taskStatus = 'done'
     
     return (
