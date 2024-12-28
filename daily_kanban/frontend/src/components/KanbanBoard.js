@@ -112,7 +112,7 @@ function KanbanBoard({setSelectedDate}) {
             } else {
                 // Move task to a different column
                 const updatedTasks = prevTasks.map(task =>
-                    task.id === active.id ? { ...task, status: parseInt(overColumn) } : task
+                    task.id === active.id ? { ...task, status: overColumn } : task
                 );
 
                 const csrftoken = document.querySelector('[name=csrf-token]').content;
@@ -166,6 +166,7 @@ function KanbanBoard({setSelectedDate}) {
                                 className='column'
                                 title='Backlog'
                                 status='0'
+                                activeId={activeId}
                                 />
                             <a href="" className='show-calendar'
                             onClick={(e) => {

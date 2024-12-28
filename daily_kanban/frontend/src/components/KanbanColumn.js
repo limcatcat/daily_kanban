@@ -9,7 +9,7 @@ function KanbanColumn({title, status, activeId}) {
 
     const { tasks } = useTaskContext();
 
-    const tasksByStatus = tasks.filter(task => task.status === parseInt(status));
+    const tasksByStatus = tasks.filter(task => task.status === status);
 
     const {setNodeRef, isOver} = useDroppable({id:status});
 

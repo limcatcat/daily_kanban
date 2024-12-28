@@ -28,16 +28,16 @@ class User(models.Model):
 class Task(models.Model):
     
     STATUS_CHOICES = (
-        (0, 'Backlog'),
-        (1, 'Today'),
-        (2, 'In Progress'),
-        (3, 'Done')
+        ('0', 'Backlog'),
+        ('1', 'Today'),
+        ('2', 'In Progress'),
+        ('3', 'Done')
     )
     
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     description = models.CharField(max_length=500)
-    status = models.IntegerField(choices=STATUS_CHOICES, default=0)
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
     date_created = models.DateTimeField()
     date_assigned = models.DateTimeField(null=True, blank=True)
     date_moved = models.DateField(null=True, blank=True)
