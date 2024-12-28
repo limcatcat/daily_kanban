@@ -58,7 +58,7 @@
 
 .kanban {
     display: grid;
-    grid-template-columns: repeat(4, minmax(15rem, 1fr));
+    grid-template-columns: repeat(4, minmax(9rem, 1fr));
     gap: 1rem;
     /* display: flex; */
     justify-content: center;
