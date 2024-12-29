@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import KanbanColumn from './KanbanColumn';
 import { DndContext, DragOverlay, KeyboardSensor, PointerSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { useState } from 'react';
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import Task from './Task';
-import { useTaskContext } from '../context/TaskContext';
+import { useTaskContext, fetchTasks } from '../context/TaskContext';
 import Cal from './Calendar';
 import Calendar from 'react-calendar';
 
@@ -44,10 +44,10 @@ import Calendar from 'react-calendar';
 // ]
 
 
-function KanbanBoard({setSelectedDate}) {
+function KanbanBoard({selectedDate, setSelectedDate}) {
 
     // const [tasks, setTasks] = useState(testTasks);
-    const { tasks, setTasks } = useTaskContext();
+    const { tasks, setTasks, setSelectedDate: setContextSelectedDate } = useTaskContext();
     const [activeId, setActiveId] = useState(null);
     const [showBacklog, setShowBacklog] = useState(true);
 
@@ -59,6 +59,13 @@ function KanbanBoard({setSelectedDate}) {
     //     in_progress: tasks.filter(task => task.status == 'In Progress'),
     //     done: tasks.filter(task => task.status == 'Done')
     // };
+
+
+    const handleDateChange = (date) => {
+        setSelectedDate(date); // update the date in KanbanBoard
+        setContextSelectedDate(date); // update the date in TaskContext
+    }
+
 
     const handleDragStart = e => {
         setActiveId(e.active.id);
@@ -289,7 +296,7 @@ function KanbanBoard({setSelectedDate}) {
                         <div className='backlog-column'>
                             {/* <h1>Calendar</h1> */}
                             
-                            <Calendar onChange={(date) => setSelectedDate(date)}/>
+                            <Calendar onChange={handleDateChange}/>
                             <a href="" className='show-backlog'
                             onClick={(e) => {
                                 e.preventDefault();

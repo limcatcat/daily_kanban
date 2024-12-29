@@ -16,25 +16,38 @@ const testTasks = [
 export function TaskProvider({ children }) {
     const [tasks, setTasks] = useState([]);
     const [activeId, setActiveId] = useState(null);
+    const [selectedDate, setSelectedDate] = useState(new Date());
 
     // put Django API endpoints here later (added below)
-    useEffect(() => {
-        const fetchTasks = async () => {
-            try {
-                const response = await fetch('http://localhost:8000/tasks');
-                if (!response.ok) throw new Error('Failed to fetch tasks');
-                const data = await response.json();
-                setTasks(data);
-            } catch (error) {
-                console.error('Error fetching tasks:', error);
-            }
-        };
+    const fetchTasks = async (date) => {
 
-        fetchTasks();
-    }, []);
+        const csrftoken = document.querySelector('[name=csrf-token]').content;
+        const formattedDate = date.toLocaleDateString('en-CA');
+
+        try {
+            const response = await fetch(`/tasks?date=${formattedDate}`, {
+                method: 'GET',
+                headers: {
+                    'Content-type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+            });
+            if (!response.ok) throw new Error('Failed to fetch tasks');
+            const data = await response.json();
+            setTasks(data);
+        } catch (error) {
+            console.error('Error fetching tasks:', error);
+        }
+    };
+
+
+    useEffect(() => {
+        fetchTasks(selectedDate);
+    }, [selectedDate]);
+
 
     return (
-        <TaskContext.Provider value={{ tasks, setTasks, activeId, setActiveId }}>
+        <TaskContext.Provider value={{ tasks, setTasks, activeId, setActiveId, selectedDate, setSelectedDate }}>
             {children}
         </TaskContext.Provider>
     );
