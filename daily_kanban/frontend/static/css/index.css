@@ -53,11 +53,11 @@
 
 .kanban {
     display: grid;
-    grid-template-columns: 25% repeat(3, minmax(20rem, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(4, minmax(9rem, 1fr));
+    gap: 1rem;
     /* display: flex; */
     justify-content: center;
-    align-items: start;
+    align-items: start;  
 }
 
 .column {

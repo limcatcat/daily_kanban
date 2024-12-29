@@ -14,10 +14,24 @@ const testTasks = [
 ];
 
 export function TaskProvider({ children }) {
-    const [tasks, setTasks] = useState(testTasks);
-    const [activeId, setActiveId] = useState(null)
+    const [tasks, setTasks] = useState([]);
+    const [activeId, setActiveId] = useState(null);
 
     // put Django API endpoints here later
+    useEffect(() => {
+        const fetchTasks = async () => {
+            try {
+                const response = await fetch('http://localhost:8000/tasks');
+                if (!response.ok) throw new Error('Failed to fetch tasks');
+                const data = await response.json();
+                setTasks(data);
+            } catch (error) {
+                console.error('Error fetching tasks:', error);
+            }
+        };
+
+        fetchTasks();
+    }, []);
 
     return (
         <TaskContext.Provider value={{ tasks, setTasks, activeId, setActiveId }}>
