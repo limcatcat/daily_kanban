@@ -186,10 +186,12 @@ function KanbanBoard({setSelectedDate}) {
         const csrftoken = document.querySelector('[name=csrf-token').content;
 
         fetch(`/tasks/${taskId}/delete/`, {
-            method: 'DELETE',
+            method: 'PATCH',
             headers: {
+                'Content-type': 'application/json',
                 'X-CSRFToken': csrftoken,
             },
+            body: JSON.stringify({archived: true}),
         })
         .then(response => {
             if (!response.ok) {

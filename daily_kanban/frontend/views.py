@@ -21,7 +21,7 @@ class StatsView(TemplateView):
 
 class TaskListAPIView(APIView):
     def get(self, reqeust):
-        tasks = Task.objects.all()
+        tasks = Task.objects.filter(archived=False)
         serializer = TaskSerializer(tasks, many=True)
         return Response(serializer.data)
     
@@ -99,11 +99,12 @@ def update_task_description(request, task_id):
         return Response({'error': 'Task not found'}, status=404)
 
 
-@api_view(['DELETE'])
+@api_view(['PATCH'])
 def delete_task(request, task_id):
     try:
         task = Task.objects.get(id=task_id)
-        task.delete()
+        task.archived = True
+        task.save()
         return Response({'message': 'Task deleted successfully'}, status=200)
     except Task.DoesNotExist:
         return Response({'error': 'Task not found'}, status=404)    

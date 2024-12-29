@@ -40,8 +40,8 @@ class Task(models.Model):
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
     date_created = models.DateTimeField()
     date_assigned = models.DateTimeField(null=True, blank=True)
-    date_moved = models.DateField(null=True, blank=True)
     date_done = models.DateTimeField(null=True, blank=True)
+    archived = models.BooleanField(default=False)
 
 
     class Meta:

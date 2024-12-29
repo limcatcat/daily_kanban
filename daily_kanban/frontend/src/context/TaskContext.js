@@ -17,7 +17,7 @@ export function TaskProvider({ children }) {
     const [tasks, setTasks] = useState([]);
     const [activeId, setActiveId] = useState(null);
 
-    // put Django API endpoints here later
+    // put Django API endpoints here later (added below)
     useEffect(() => {
         const fetchTasks = async () => {
             try {
