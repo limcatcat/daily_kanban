@@ -80,3 +80,20 @@ def update_task_status(request, task_id):
         return Response({'message': 'Task status updated successfully'}, status=200)
     except Task.DoesNotExist:
         return Response({'error': 'Task not found'}, status=404)
+    
+
+@api_view(['PATCH'])
+def update_task_description(request, task_id):
+    try:
+        task = Task.objects.get(id=task_id)
+        new_description = request.data.get('description')
+
+        if not new_description or not isinstance(new_description, str):
+            return Response({'error': 'Invalid description or empty string'}, status=400)
+
+        task.description = new_description
+        task.save()
+
+        return Response({'message': 'Task description updated successfully'}, status=200)
+    except Task.DoesNotExist:
+        return Response({'error': 'Task not found'}, status=404)       

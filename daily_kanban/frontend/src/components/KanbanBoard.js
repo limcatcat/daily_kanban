@@ -64,7 +64,7 @@ function KanbanBoard({setSelectedDate}) {
 
     const handleDragEnd = e => {
         const {active, over} = e;
-        console.log('over object:', over);
+        // console.log('over object:', over);
         
         // console.log(`Dragging ended with activeId: ${active.id}`);
         
@@ -145,6 +145,41 @@ function KanbanBoard({setSelectedDate}) {
     };
 
 
+    const handleUpdateTask = (taskId, newDescription) => {
+        const updatedTasks = tasks.map(task =>
+            task.id === taskId ? {...task, description: newDescription} : task
+        );
+        setTasks(updatedTasks);
+
+
+        const csrftoken = document.querySelector('[name=csrf-token]').content;
+
+        fetch(`/tasks/${taskId}/update-description/`, {
+            method: 'PATCH',
+            headers: {
+                'Content-type': 'application/json',
+                'X-CSRFToken': csrftoken,
+            },
+            body: JSON.stringify({description: newDescription}),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    setTasks(tasks); // revert the change if the update fails
+                    console.error('Failed to update task description');
+                } else {
+                    console.log('Task description updated successfully');
+                    
+                }
+            })
+            .catch(error => {
+                setTasks(tasks);
+                console.error('Error:', error)});
+
+    };
+
+
+
+
     const sensors = useSensors(
         useSensor(PointerSensor),
         useSensor(TouchSensor),
@@ -167,6 +202,7 @@ function KanbanBoard({setSelectedDate}) {
                                 title='Backlog'
                                 status='0'
                                 activeId={activeId}
+                                onUpdateTask={handleUpdateTask}
                                 />
                             <a href="" className='show-calendar'
                             onClick={(e) => {
@@ -193,9 +229,9 @@ function KanbanBoard({setSelectedDate}) {
                             
                         </div> 
                     )}
-                <KanbanColumn className='column' title='Today' status='1' activeId={activeId} />
-                <KanbanColumn className='column' title='In Progress' status='2' activeId={activeId} />
-                <KanbanColumn className='column' title='Done' status='3' activeId={activeId} />
+                <KanbanColumn className='column' title='Today' status='1' activeId={activeId} onUpdateTask={handleUpdateTask} />
+                <KanbanColumn className='column' title='In Progress' status='2' activeId={activeId} onUpdateTask={handleUpdateTask} />
+                <KanbanColumn className='column' title='Done' status='3' activeId={activeId} onUpdateTask={handleUpdateTask} />
 
 
                 <DragOverlay>
