@@ -173,8 +173,34 @@ function KanbanBoard({setSelectedDate}) {
             })
             .catch(error => {
                 setTasks(tasks);
-                console.error('Error:', error)});
+                console.error('Error:', error)
+            });
+    };
 
+
+
+    const handleDeleteTask = taskId => {
+        const updatedTasks = tasks.filter(task => task.id !== taskId);
+        setTasks(updatedTasks);
+
+        const csrftoken = document.querySelector('[name=csrf-token').content;
+
+        fetch(`/tasks/${taskId}/delete/`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRFToken': csrftoken,
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                setTasks(tasks);
+                console.error('Failed to delete task');
+            }
+        })
+        .catch(error => {
+            setTasks(tasks);
+            console.error('Error:', error);
+        });
     };
 
 
@@ -203,6 +229,7 @@ function KanbanBoard({setSelectedDate}) {
                                 status='0'
                                 activeId={activeId}
                                 onUpdateTask={handleUpdateTask}
+                                onDeleteTask={handleDeleteTask}
                                 />
                             <a href="" className='show-calendar'
                             onClick={(e) => {
@@ -229,9 +256,9 @@ function KanbanBoard({setSelectedDate}) {
                             
                         </div> 
                     )}
-                <KanbanColumn className='column' title='Today' status='1' activeId={activeId} onUpdateTask={handleUpdateTask} />
-                <KanbanColumn className='column' title='In Progress' status='2' activeId={activeId} onUpdateTask={handleUpdateTask} />
-                <KanbanColumn className='column' title='Done' status='3' activeId={activeId} onUpdateTask={handleUpdateTask} />
+                <KanbanColumn className='column' title='Today' status='1' activeId={activeId} onUpdateTask={handleUpdateTask} onDeleteTask={handleDeleteTask} />
+                <KanbanColumn className='column' title='In Progress' status='2' activeId={activeId} onUpdateTask={handleUpdateTask} onDeleteTask={handleDeleteTask} />
+                <KanbanColumn className='column' title='Done' status='3' activeId={activeId} onUpdateTask={handleUpdateTask} onDeleteTask={handleDeleteTask} />
 
 
                 <DragOverlay>

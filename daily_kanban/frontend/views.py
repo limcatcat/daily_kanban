@@ -96,4 +96,14 @@ def update_task_description(request, task_id):
 
         return Response({'message': 'Task description updated successfully'}, status=200)
     except Task.DoesNotExist:
-        return Response({'error': 'Task not found'}, status=404)       
+        return Response({'error': 'Task not found'}, status=404)
+
+
+@api_view(['DELETE'])
+def delete_task(request, task_id):
+    try:
+        task = Task.objects.get(id=task_id)
+        task.delete()
+        return Response({'message': 'Task deleted successfully'}, status=200)
+    except Task.DoesNotExist:
+        return Response({'error': 'Task not found'}, status=404)    

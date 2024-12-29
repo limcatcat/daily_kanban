@@ -5,7 +5,7 @@ import { useDroppable } from '@dnd-kit/core';
 import { useTaskContext } from '../context/TaskContext';
 
 
-function KanbanColumn({title, status, activeId, onUpdateTask}) {
+function KanbanColumn({title, status, activeId, onUpdateTask, onDeleteTask}) {
 
     const { tasks } = useTaskContext();
 
@@ -36,7 +36,7 @@ function KanbanColumn({title, status, activeId, onUpdateTask}) {
                         
                         return (
                             <Task className={`task ${status} ${isDragging ? 'dragging' : ''}`} id={task.id} key={task.id} description={task.description} status={task.status} isDragging={isDragging}
-                            onUpdateTask={onUpdateTask}
+                            onUpdateTask={onUpdateTask} onDeleteTask={onDeleteTask}
                             />
                         );
                     })}             
