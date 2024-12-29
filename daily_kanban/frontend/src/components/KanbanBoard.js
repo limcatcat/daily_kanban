@@ -51,6 +51,9 @@ function KanbanBoard({setSelectedDate}) {
     const [activeId, setActiveId] = useState(null);
     const [showBacklog, setShowBacklog] = useState(true);
 
+    const [isAdding, setIsAdding] = useState(false);
+    const [newTaskDescription, setNewTaskDescription] = useState('');
+
     // const tasksByStatus = {
     //     today: tasks.filter(task => task.status == 'Today'),
     //     in_progress: tasks.filter(task => task.status == 'In Progress'),
@@ -207,6 +210,39 @@ function KanbanBoard({setSelectedDate}) {
 
 
 
+    const handleAddTask = description => {
+        const csrftoken = document.querySelector('[name=csrf-token').content;
+
+        fetch('/tasks/', {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                'X-CSRFToken': csrftoken,
+            },
+            body: JSON.stringify({ description, status: '0', }),
+        })
+        .then(response => {
+            if (response.ok) return response.json();
+            throw new Error('Failed to add task');
+        })
+        .then(newTask => {
+            setTasks([...tasks, newTask]);
+            setIsAdding(false);
+            setNewTaskDescription(''); // reset input field
+        })
+        .catch(error => console.error(error));
+    };
+
+    const handleStartAddingTask = () => {
+        setIsAdding(true);
+    };
+
+    const handleCancelAddingTask = () => {
+        setIsAdding(false);
+        setNewTaskDescription('');
+    }
+
+
 
     const sensors = useSensors(
         useSensor(PointerSensor),
@@ -232,6 +268,12 @@ function KanbanBoard({setSelectedDate}) {
                                 activeId={activeId}
                                 onUpdateTask={handleUpdateTask}
                                 onDeleteTask={handleDeleteTask}
+                                isAdding={isAdding}
+                                newTaskDescription={newTaskDescription}
+                                onAddTask={handleAddTask}
+                                onStartAddingTask={handleStartAddingTask}
+                                onCancelAddingTask={handleCancelAddingTask}
+                                onInputChange={setNewTaskDescription}
                                 />
                             <a href="" className='show-calendar'
                             onClick={(e) => {

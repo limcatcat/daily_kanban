@@ -78,3 +78,23 @@
     background-color: aliceblue;
     transition: background-color 0.3s ease;
 }
+
+.new-task input {
+    width: 100%;
+    padding: 8px;
+    margin: 4px 0;
+    font-size: 14px;
+}
+.add-task-button {
+    background-color: #ffffff;
+    color: rgb(204, 204, 204);
+    border-radius: 9px;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+.add-task-button:hover {
+    /* background-color: #e3d2d1; */
+    background-color: #ffffff;
+    color: #000000;
+}

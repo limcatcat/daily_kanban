@@ -70,6 +70,8 @@ function Task({id, description, status, handleDragStart, isDragging, onUpdateTas
             e.preventDefault();
         } else if (e.key === ' ') {
             e.stopPropagation(); // this is necessary to prevent space bar from stopping the editing mode!!!
+        } else if (e.key === 'Escape') {
+            setIsEditing(false);
         }
     }
     
