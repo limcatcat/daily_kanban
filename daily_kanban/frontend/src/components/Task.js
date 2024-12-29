@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import '../../static/css/task.css'
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -10,6 +10,8 @@ function Task({id, description, status, handleDragStart, isDragging, onUpdateTas
     const [editedDescription, setEditedDescription] = useState(description);
     const [showContextMenu, setShowContextMenu] = useState(false);
     const [contextMenuPosition, setContextMenuPosition] = useState({x: 0, y: 0});
+
+    const contextMenuRef = useRef(null);
 
     const {attributes, listeners, setNodeRef, transform, transition} = useSortable({id});
 
@@ -55,8 +57,10 @@ function Task({id, description, status, handleDragStart, isDragging, onUpdateTas
         setIsEditing(false);
     };
 
-    const closeContextMenu = () => {
-        setShowContextMenu(false);
+    const closeContextMenu = (e) => {
+        if (contextMenuRef.current && !contextMenuRef.current.contains(e.target)) {
+            setShowContextMenu(false);
+        }
     };
 
 
@@ -69,6 +73,20 @@ function Task({id, description, status, handleDragStart, isDragging, onUpdateTas
         }
     }
     
+
+    useEffect(() => {
+        if (showContextMenu) {
+            document.addEventListener('click', closeContextMenu);
+        } else {
+            document.removeEventListener('click', closeContextMenu);
+        }
+
+        return () => {
+            document.removeEventListener('click', closeContextMenu);
+        };
+    }, [showContextMenu]);
+
+
     return (
         <>
             <div className={`task ${taskStatus} ${isDragging ? 'dragging' : ''}`}
@@ -92,8 +110,10 @@ function Task({id, description, status, handleDragStart, isDragging, onUpdateTas
             </div>
 
 
+            {/* context menu */}
             {showContextMenu && (
                 <div
+                    ref={contextMenuRef}
                     className="context-menu"
                     style={{ position: 'absolute', left: contextMenuPosition.x, top: contextMenuPosition.y }}
                     onClick={closeContextMenu} // Close the menu when clicked outside
