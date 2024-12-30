@@ -7,6 +7,8 @@ from rest_framework import status
 from .models import Task
 from .serializers import TaskSerializer
 from django.utils import timezone
+from datetime import datetime, date
+from django.db.models import Q
 
 
 # Create your views here.
@@ -20,13 +22,31 @@ class StatsView(TemplateView):
     template_name = "frontend/stats.html"
 
 class TaskListAPIView(APIView):
-    def get(self, reqeust):
-        tasks = Task.objects.all()
+    def get(self, request):
+        
+        selected_date = request.query_params.get('date')
+        if not selected_date:
+            selected_date = date.today()
+        else:
+            try:
+                selected_date = datetime.strptime(selected_date, '%Y-%m-%d').date()
+            except ValueError:
+                return Response({'error': 'Invalid date format'}, status=status.HTTP_400_BAD_REQUEST)
+
+        tasks = Task.objects.filter(
+            Q(status='0') |
+            Q(status='1', date_assigned__date__lte=selected_date) |
+            Q(status='2', date_assigned__date__lte=selected_date) |
+            Q(status='3', date_done__date=selected_date),
+            archived=False)
         serializer = TaskSerializer(tasks, many=True)
         return Response(serializer.data)
     
     def post(self, request):
-        serializer = TaskSerializer(data=request.data)
+        data = request.data
+        data['status'] = data.get('status', '0')
+
+        serializer = TaskSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -96,4 +116,15 @@ def update_task_description(request, task_id):
 
         return Response({'message': 'Task description updated successfully'}, status=200)
     except Task.DoesNotExist:
-        return Response({'error': 'Task not found'}, status=404)       
+        return Response({'error': 'Task not found'}, status=404)
+
+
+@api_view(['PATCH'])
+def delete_task(request, task_id):
+    try:
+        task = Task.objects.get(id=task_id)
+        task.archived = True
+        task.save()
+        return Response({'message': 'Task deleted successfully'}, status=200)
+    except Task.DoesNotExist:
+        return Response({'error': 'Task not found'}, status=404)    

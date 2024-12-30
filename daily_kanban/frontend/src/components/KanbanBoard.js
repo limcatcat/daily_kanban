@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import KanbanColumn from './KanbanColumn';
 import { DndContext, DragOverlay, KeyboardSensor, PointerSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { useState } from 'react';
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import Task from './Task';
-import { useTaskContext } from '../context/TaskContext';
+import { useTaskContext, fetchTasks } from '../context/TaskContext';
 import Cal from './Calendar';
 import Calendar from 'react-calendar';
 
@@ -44,18 +44,28 @@ import Calendar from 'react-calendar';
 // ]
 
 
-function KanbanBoard({setSelectedDate}) {
+function KanbanBoard({selectedDate, setSelectedDate}) {
 
     // const [tasks, setTasks] = useState(testTasks);
-    const { tasks, setTasks } = useTaskContext();
+    const { tasks, setTasks, setSelectedDate: setContextSelectedDate } = useTaskContext();
     const [activeId, setActiveId] = useState(null);
     const [showBacklog, setShowBacklog] = useState(true);
+
+    const [isAdding, setIsAdding] = useState(false);
+    const [newTaskDescription, setNewTaskDescription] = useState('');
 
     // const tasksByStatus = {
     //     today: tasks.filter(task => task.status == 'Today'),
     //     in_progress: tasks.filter(task => task.status == 'In Progress'),
     //     done: tasks.filter(task => task.status == 'Done')
     // };
+
+
+    const handleDateChange = (date) => {
+        setSelectedDate(date); // update the date in KanbanBoard
+        setContextSelectedDate(date); // update the date in TaskContext
+    }
+
 
     const handleDragStart = e => {
         setActiveId(e.active.id);
@@ -173,10 +183,71 @@ function KanbanBoard({setSelectedDate}) {
             })
             .catch(error => {
                 setTasks(tasks);
-                console.error('Error:', error)});
-
+                console.error('Error:', error)
+            });
     };
 
+
+
+    const handleDeleteTask = taskId => {
+        const updatedTasks = tasks.filter(task => task.id !== taskId);
+        setTasks(updatedTasks);
+
+        const csrftoken = document.querySelector('[name=csrf-token').content;
+
+        fetch(`/tasks/${taskId}/delete/`, {
+            method: 'PATCH',
+            headers: {
+                'Content-type': 'application/json',
+                'X-CSRFToken': csrftoken,
+            },
+            body: JSON.stringify({archived: true}),
+        })
+        .then(response => {
+            if (!response.ok) {
+                setTasks(tasks);
+                console.error('Failed to delete task');
+            }
+        })
+        .catch(error => {
+            setTasks(tasks);
+            console.error('Error:', error);
+        });
+    };
+
+
+
+    const handleAddTask = description => {
+        const csrftoken = document.querySelector('[name=csrf-token').content;
+
+        fetch('/tasks/', {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                'X-CSRFToken': csrftoken,
+            },
+            body: JSON.stringify({ description, status: '0', }),
+        })
+        .then(response => {
+            if (response.ok) return response.json();
+            throw new Error('Failed to add task');
+        })
+        .then(newTask => {
+            setTasks([...tasks, newTask]);
+            setIsAdding(false);
+            setNewTaskDescription(''); // reset input field
+        })
+        .catch(error => console.error(error));
+    };
+
+    const handleStartAddingTask = () => {
+        setIsAdding(true);
+    };
+
+    const handleCancelAddingTask = () => {
+        setIsAdding(false);
+        setNewTaskDescription('');
+    }
 
 
 
@@ -203,6 +274,13 @@ function KanbanBoard({setSelectedDate}) {
                                 status='0'
                                 activeId={activeId}
                                 onUpdateTask={handleUpdateTask}
+                                onDeleteTask={handleDeleteTask}
+                                isAdding={isAdding}
+                                newTaskDescription={newTaskDescription}
+                                onAddTask={handleAddTask}
+                                onStartAddingTask={handleStartAddingTask}
+                                onCancelAddingTask={handleCancelAddingTask}
+                                onInputChange={setNewTaskDescription}
                                 />
                             <a href="" className='show-calendar'
                             onClick={(e) => {
@@ -218,7 +296,7 @@ function KanbanBoard({setSelectedDate}) {
                         <div className='backlog-column'>
                             {/* <h1>Calendar</h1> */}
                             
-                            <Calendar onChange={(date) => setSelectedDate(date)}/>
+                            <Calendar onChange={handleDateChange}/>
                             <a href="" className='show-backlog'
                             onClick={(e) => {
                                 e.preventDefault();
@@ -229,9 +307,9 @@ function KanbanBoard({setSelectedDate}) {
                             
                         </div> 
                     )}
-                <KanbanColumn className='column' title='Today' status='1' activeId={activeId} onUpdateTask={handleUpdateTask} />
-                <KanbanColumn className='column' title='In Progress' status='2' activeId={activeId} onUpdateTask={handleUpdateTask} />
-                <KanbanColumn className='column' title='Done' status='3' activeId={activeId} onUpdateTask={handleUpdateTask} />
+                <KanbanColumn className='column' title='Today' status='1' activeId={activeId} onUpdateTask={handleUpdateTask} onDeleteTask={handleDeleteTask} />
+                <KanbanColumn className='column' title='In Progress' status='2' activeId={activeId} onUpdateTask={handleUpdateTask} onDeleteTask={handleDeleteTask} />
+                <KanbanColumn className='column' title='Done' status='3' activeId={activeId} onUpdateTask={handleUpdateTask} onDeleteTask={handleDeleteTask} />
 
 
                 <DragOverlay>

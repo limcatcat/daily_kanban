@@ -35,16 +35,16 @@ class Task(models.Model):
     )
     
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, default='quokka', on_delete=models.CASCADE) # change later after implementing user authentication
     description = models.CharField(max_length=500)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
-    date_created = models.DateTimeField()
+    date_created = models.DateTimeField(auto_now_add=True)
     date_assigned = models.DateTimeField(null=True, blank=True)
-    date_moved = models.DateField(null=True, blank=True)
     date_done = models.DateTimeField(null=True, blank=True)
+    archived = models.BooleanField(default=False)
 
 
     class Meta:
         constraints = [
-            UniqueConstraint(fields=['user', 'description'], name='Task_composite_primary_key')
+            UniqueConstraint(fields=['description', 'date_created'], name='Task_composite_primary_key')
         ]

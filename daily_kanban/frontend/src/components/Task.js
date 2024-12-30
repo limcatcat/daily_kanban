@@ -4,7 +4,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
 
-function Task({id, description, status, handleDragStart, isDragging, onUpdateTask}) {
+function Task({id, description, status, handleDragStart, isDragging, onUpdateTask, onDeleteTask}) {
 
     const [isEditing, setIsEditing] = useState(false);
     const [editedDescription, setEditedDescription] = useState(description);
@@ -70,6 +70,8 @@ function Task({id, description, status, handleDragStart, isDragging, onUpdateTas
             e.preventDefault();
         } else if (e.key === ' ') {
             e.stopPropagation(); // this is necessary to prevent space bar from stopping the editing mode!!!
+        } else if (e.key === 'Escape') {
+            setIsEditing(false);
         }
     }
     
@@ -85,6 +87,17 @@ function Task({id, description, status, handleDragStart, isDragging, onUpdateTas
             document.removeEventListener('click', closeContextMenu);
         };
     }, [showContextMenu]);
+
+
+    const handleDelete = () => {
+        const confirmed = window.confirm('Are you sure you want to delete this task?');
+
+        if (confirmed) {
+            onDeleteTask(id);
+        }
+        setShowContextMenu(false);
+    };
+
 
 
     return (
@@ -120,6 +133,7 @@ function Task({id, description, status, handleDragStart, isDragging, onUpdateTas
                 >
                     <ul>
                         <li onClick={handleEdit}>Edit</li>
+                        <li onClick={handleDelete}>Delete</li>
                     </ul>
                 </div>
             )}
