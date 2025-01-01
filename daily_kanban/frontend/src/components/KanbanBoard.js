@@ -7,6 +7,7 @@ import Task from './Task';
 import { useTaskContext, fetchTasks } from '../context/TaskContext';
 import Cal from './Calendar';
 import Calendar from 'react-calendar';
+import { format } from 'date-fns';
 
 
 // const testTasks = [
@@ -60,6 +61,8 @@ function KanbanBoard() {
     //     in_progress: tasks.filter(task => task.status == 'In Progress'),
     //     done: tasks.filter(task => task.status == 'Done')
     // };
+
+    const formattedSelectedDate = format(selectedDate, "yyyy-MM-dd'T'hh:mm:ss");
 
 
     const handleDateChange = (date) => {
@@ -135,12 +138,13 @@ function KanbanBoard() {
                         'Content-type': 'application/json',
                         'X-CSRFToken': csrftoken,
                     },
-                    body: JSON.stringify({status: overColumn, date: selectedDate}),
+                    body: JSON.stringify({status: overColumn, date: new Date().toLocaleDateString('en-CA') == formattedSelectedDate.split('T')[0] ? format(new Date(), "yyyy-MM-dd'T'hh:mm:ss") : formattedSelectedDate}),
                 })
                     .then(response => {
                         if (!response.ok) {
                             console.error('Failed to update task status');
                         }
+                        
                     })
                     .catch(error => console.error('Error:', error));
                 
@@ -228,7 +232,7 @@ function KanbanBoard() {
                 'Content-type': 'application/json',
                 'X-CSRFToken': csrftoken,
             },
-            body: JSON.stringify({ description, status: '0', }),
+            body: JSON.stringify({ description, status: '0', date_created: format(new Date(), "yyyy-MM-dd'T'hh:mm:ss")}),
         })
         .then(response => {
             if (response.ok) {

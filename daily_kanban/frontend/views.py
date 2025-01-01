@@ -9,6 +9,7 @@ from .serializers import TaskSerializer
 from django.utils import timezone
 from datetime import datetime, date
 from django.db.models import Q
+from django.utils.timezone import localtime
 
 
 # Create your views here.
@@ -30,6 +31,7 @@ class TaskListAPIView(APIView):
         else:
             try:
                 selected_date = datetime.strptime(selected_date, '%Y-%m-%d').date()
+
             except ValueError:
                 return Response({'error': 'Invalid date format'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -45,6 +47,7 @@ class TaskListAPIView(APIView):
     def post(self, request):
         data = request.data
         data['status'] = data.get('status', '0')
+        data['date_created'] = data.get('date_created')
 
         serializer = TaskSerializer(data=data)
         if serializer.is_valid():
@@ -55,6 +58,9 @@ class TaskListAPIView(APIView):
 
 @api_view(['PATCH'])
 def update_task_status(request, task_id):
+
+    today = datetime.today().date()
+
     try:
         task = Task.objects.get(id=task_id)
         # task.status = request.data.get('status')
@@ -69,22 +75,34 @@ def update_task_status(request, task_id):
 
         # scenario 1-1: Task is moved from Backlog to another column (Today/In Progress)
         if task.status == '0' and new_status in ['1', '2']:
-            task.date_assigned = selected_date
+            if selected_date == today:
+                task.date_assigned = timezone.now()
+            else:
+                task.date_assigned = selected_date
+ 
             print(f'date_assigned: {task.date_assigned}')
 
         # scenario 1-2: Task is moved from Backlog to Done
         if task.status == '0' and new_status == '3':
-            task.date_assigned = timezone.now()
-            task.date_done = timezone.now()
+            if selected_date == today:
+                task.date_assigned = timezone.now()
+                task.date_done = timezone.now()
+            else:
+                task.date_assigned = selected_date
+                task.date_done = selected_date
+
             print(f'date_assigned: {task.date_assigned}, date_done: {task.date_done}')
 
-        # scenario 3: Task is moved from Today/In Progress back to Backlog
+        # scenario 2: Task is moved from Today/In Progress back to Backlog
         if task.status in ['1', '2'] and new_status == '0':
             task.date_assigned = None
 
-        # scenario 4: Task is moved to Done or out of Done
+        # scenario 3: Task is moved to Done or out of Done
         if task.status in ['1', '2'] and new_status == '3': # moved to Done
-            task.date_done = timezone.now()
+            if selected_date == today:
+                task.date_done = timezone.now()
+            else:
+                task.date_done = selected_date
         elif task.status == '3' and new_status in ['0', '1', '2']: # moved out of Done
             if new_status in ['1', '2']:
                 task.date_done = None
