@@ -17,6 +17,7 @@ export function TaskProvider({ children }) {
     const [tasks, setTasks] = useState([]);
     const [activeId, setActiveId] = useState(null);
     const [selectedDate, setSelectedDate] = useState(new Date());
+    const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
 
     // put Django API endpoints here later (added below)
     const fetchTasks = async (date) => {
@@ -41,13 +42,19 @@ export function TaskProvider({ children }) {
     };
 
 
+    const handleMonthChange = (selectedDate) => {
+        setSelectedMonth(selectedDate.getMonth());
+    }
+
     useEffect(() => {
         fetchTasks(selectedDate);
+        handleMonthChange(selectedDate);
+        
     }, [selectedDate]);
 
 
     return (
-        <TaskContext.Provider value={{ tasks, setTasks, activeId, setActiveId, selectedDate, setSelectedDate }}>
+        <TaskContext.Provider value={{ tasks, setTasks, activeId, setActiveId, selectedDate, setSelectedDate, selectedMonth }}>
             {children}
         </TaskContext.Provider>
     );

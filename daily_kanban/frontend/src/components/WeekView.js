@@ -5,7 +5,7 @@ import { useTaskContext } from "../context/TaskContext";
 
 
 const WeekView = () => {
-    const {selectedDate, setSelectedDate} = useTaskContext();
+    const {selectedDate, setSelectedDate, selectedMonth} = useTaskContext();
     const [currentWeek, setCurrentWeek] = useState([]);
 
 
@@ -34,27 +34,77 @@ const isSelectedDate = (date) => {
     return format(date, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd') ? 'selected' : ''
 };
 
+const getMonthName = (selectedMonth) => {
+
+    let month;
+
+    switch (selectedMonth) {
+        case 0:
+            month = 'JAN'
+            break;
+        case 1:
+            month = 'FEB'
+            break;
+        case 2:
+            month = 'MAR'
+            break;
+        case 3:
+            month = 'APR'
+            break;
+        case 4:
+            month = 'MAY'
+            break;
+        case 5:
+            month = 'JUN'
+            break;
+        case 6:
+            month = 'JUL'
+            break;
+        case 7:
+            month = 'AUG'
+            break;
+        case 8:
+            month = 'SEP'
+            break;
+        case 9:
+            month = 'OCT'
+            break;
+        case 10:
+            month = 'NOV'
+            break;
+        case 11:
+            month = 'DEC'
+            break;
+    }
+
+    return month;
+}
+
+
 
 return (
-    <>
-        <span className="week-change" onClick={goToPreviousWeek}>{"＜"}</span>
-        {currentWeek.map((date) => (
-            <div key={date} className={`day ${isToday(date) ? "is-today":""}`}>
-                <div className="day-container">
+    <div className="week-container">
+        <div className="month">{getMonthName(selectedMonth)}</div>
+            <div className="week-row">
+                <span className="week-change" onClick={goToPreviousWeek}>{"＜"}</span>
+                {currentWeek.map((date) => (
+                    <div key={date} className={`day ${isToday(date) ? "is-today":""}`}>
+                        <div className="day-container">
 
-                <span className={`weekday ${isSelectedDate(date)}`}>{format(date, "EEE")}</span>
-                <span className={`date ${isSelectedDate(date)}`}
-                    onClick={() =>
-                        {
-                            setSelectedDate(date)
-                        }}
-                >{format(date, "d")}</span>
+                        <span className={`weekday ${isSelectedDate(date)}`}>{format(date, "EEE")}</span>
+                        <span className={`date ${isSelectedDate(date)}`}
+                            onClick={() =>
+                                {
+                                    setSelectedDate(date)
+                                }}
+                                >{format(date, "d")}</span>
 
-                </div>
+                        </div>
+                    </div>
+                ))}
+                <span className="week-change" onClick={goToNextWeek}>{"＞"}</span>
             </div>
-        ))}
-        <span className="week-change" onClick={goToNextWeek}>{"＞"}</span>
-    </>
+    </div>
 );
 
 };
