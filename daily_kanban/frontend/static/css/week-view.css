@@ -32,3 +32,36 @@
     font-weight: bold;
 }
 
+
+.date {
+    cursor: pointer;
+}
+
+.date:hover {
+    background-color: rgb(245, 234, 220);
+    border-radius: 6px;
+}
+
+.date.selected:hover {
+    background-color: black;
+    border-radius: 0px;
+}
+
+.week-change {
+    cursor: pointer;
+    font-size: xx-large;
+}
+
+.week-change:hover {
+    background-color: rgb(232, 229, 229);
+    border-radius: 6px;
+}
+
+.selected {
+    font-weight: bold;
+    /* background-color: rgb(255, 195, 54); */
+    background-color: black;
+    color: white;
+    padding-left: 0.3rem;
+    padding-right: 0.3rem;
+}

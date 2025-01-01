@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { startOfWeek, addDays, format, isToday } from "date-fns";
+import { startOfWeek, addDays, format, isToday, addWeeks, subWeeks } from "date-fns";
 import '../../static/css/week-view.css'
+import { useTaskContext } from "../context/TaskContext";
 
 
-const WeekView = ({selectedDate}) => {
+const WeekView = () => {
+    const {selectedDate, setSelectedDate} = useTaskContext();
     const [currentWeek, setCurrentWeek] = useState([]);
 
 
@@ -18,18 +20,40 @@ useEffect(() => {
 }, [selectedDate]);
 
 
+const goToPreviousWeek = () => {
+    const previousWeekStart = subWeeks(selectedDate, 1);
+    setSelectedDate(previousWeekStart);
+};
+
+const goToNextWeek = () => {
+    const nextWeekStart = addWeeks(selectedDate, 1);
+    setSelectedDate(nextWeekStart);
+};
+
+const isSelectedDate = (date) => {
+    return format(date, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd') ? 'selected' : ''
+};
+
+
 return (
     <>
+        <span className="week-change" onClick={goToPreviousWeek}>{"＜"}</span>
         {currentWeek.map((date) => (
             <div key={date} className={`day ${isToday(date) ? "is-today":""}`}>
                 <div className="day-container">
 
-                <span className="weekday">{format(date, "EEE")}</span>
-                <span className="date">{format(date, "d")}</span>
+                <span className={`weekday ${isSelectedDate(date)}`}>{format(date, "EEE")}</span>
+                <span className={`date ${isSelectedDate(date)}`}
+                    onClick={() =>
+                        {
+                            setSelectedDate(date)
+                        }}
+                >{format(date, "d")}</span>
 
                 </div>
             </div>
         ))}
+        <span className="week-change" onClick={goToNextWeek}>{"＞"}</span>
     </>
 );
 

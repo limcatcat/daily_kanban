@@ -17,12 +17,12 @@ function App() {
 
             <div className='main-container'>
                 <div className='week'>
-                    <WeekView selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+                    <WeekView />
                 </div>
                         
                 <div className='main-content'>
               
-                    <KanbanBoard selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+                    <KanbanBoard />
                 
                 </div>
             </div>

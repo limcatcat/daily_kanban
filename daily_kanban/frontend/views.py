@@ -60,6 +60,7 @@ def update_task_status(request, task_id):
         # task.status = request.data.get('status')
 
         new_status = request.data.get('status')
+        selected_date = request.data.get('date')
 
 
         if not isinstance(new_status, str) or new_status not in ['0', '1', '2', '3']:
@@ -68,7 +69,7 @@ def update_task_status(request, task_id):
 
         # scenario 1-1: Task is moved from Backlog to another column (Today/In Progress)
         if task.status == '0' and new_status in ['1', '2']:
-            task.date_assigned = timezone.now()
+            task.date_assigned = selected_date
             print(f'date_assigned: {task.date_assigned}')
 
         # scenario 1-2: Task is moved from Backlog to Done

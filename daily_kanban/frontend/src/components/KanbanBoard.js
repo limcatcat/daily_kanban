@@ -44,10 +44,11 @@ import Calendar from 'react-calendar';
 // ]
 
 
-function KanbanBoard({selectedDate, setSelectedDate}) {
+function KanbanBoard() {
 
     // const [tasks, setTasks] = useState(testTasks);
-    const { tasks, setTasks, setSelectedDate: setContextSelectedDate } = useTaskContext();
+    // const { tasks, setTasks, selectedDate, setSelectedDate } = useTaskContext();
+    const { tasks, setTasks, selectedDate, setSelectedDate } = useTaskContext();
     const [activeId, setActiveId] = useState(null);
     const [showBacklog, setShowBacklog] = useState(true);
 
@@ -62,15 +63,16 @@ function KanbanBoard({selectedDate, setSelectedDate}) {
 
 
     const handleDateChange = (date) => {
-        setSelectedDate(date); // update the date in KanbanBoard
-        setContextSelectedDate(date); // update the date in TaskContext
-    }
+        console.log(date);
+        
+        setSelectedDate(date);
+    };
 
 
     const handleDragStart = e => {
         setActiveId(e.active.id);
         // console.log(`Dragging started with activeId: ${e.active.id}`);     
-    }
+    };
 
     const handleDragEnd = e => {
         const {active, over} = e;
@@ -133,7 +135,7 @@ function KanbanBoard({selectedDate, setSelectedDate}) {
                         'Content-type': 'application/json',
                         'X-CSRFToken': csrftoken,
                     },
-                    body: JSON.stringify({status: overColumn}),
+                    body: JSON.stringify({status: overColumn, date: selectedDate}),
                 })
                     .then(response => {
                         if (!response.ok) {
@@ -229,7 +231,10 @@ function KanbanBoard({selectedDate, setSelectedDate}) {
             body: JSON.stringify({ description, status: '0', }),
         })
         .then(response => {
-            if (response.ok) return response.json();
+            if (response.ok) {
+                console.log('new task added');         
+                return response.json();
+            }
             throw new Error('Failed to add task');
         })
         .then(newTask => {
@@ -296,7 +301,7 @@ function KanbanBoard({selectedDate, setSelectedDate}) {
                         <div className='backlog-column'>
                             {/* <h1>Calendar</h1> */}
                             
-                            <Calendar onChange={handleDateChange}/>
+                            <Calendar onChange={handleDateChange} />
                             <a href="" className='show-backlog'
                             onClick={(e) => {
                                 e.preventDefault();
