@@ -20,22 +20,36 @@
     <title>Base</title>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark" data-bs-theme="dark" style="background-color: #000000;">
-        <div class="container-fluid">
-  
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-              <a class="nav-link" href="{% url 'frontend:home' %}">Daily Kanban</a>
-              <a class="nav-link" href="{% url 'frontend:home' %}">Board</a>
-              <a class="nav-link" href="{% url 'frontend:statistics' %}">Statistics</a>
-               <a class="nav-link" href="">Login</a>
-            </div>
-          </div>
-        </div>
-      </nav>
+
+      <script>
+        function checkAuthStatus() {
+          const token = localStorage.getItem('token');
+          const authLink = document.getElementById('auth-link');
+
+          if (token) {
+            authLink.textContent = 'Logout';
+            authLink.setAttribute = ('href', '#');
+            authLink.onclick = logout;
+          } else {
+            authLink.textContent = 'Login';
+            authLink.setAttribute('href', '/login');
+            authLink.onclick = login;
+          }
+        }
+
+        function login(event) {
+          event.preventDefault();
+          window.loginFunction('username', 'password');
+        }
+
+        function logout(event) {
+          event.preventDefault();
+          checkAuthStatus();
+          window.logoutFunction();
+        }
+
+        checkAuthStatus();
+      </script>
     {% block content %}
     {% endblock %}
 
