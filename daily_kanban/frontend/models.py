@@ -4,11 +4,11 @@ from django.contrib.auth.hashers import make_password
 
 # Create your models here.
 
-class User(models.Model):
+class CustomUser(models.Model):
     user_id = models.CharField(max_length=30, primary_key=True)
     username = models.CharField(max_length=30)
     password = models.CharField(max_length=128)
-    email = models.EmailField()
+    email = models.EmailField(unique=True)
     date_created = models.DateTimeField()
     date_updated = models.DateTimeField(null=True, blank=True)
 
@@ -35,7 +35,7 @@ class Task(models.Model):
     )
     
 
-    user = models.ForeignKey(User, default='quokka', on_delete=models.CASCADE) # change later after implementing user authentication
+    user = models.ForeignKey(CustomUser, default='quokka', on_delete=models.CASCADE) # change later after implementing user authentication
     description = models.CharField(max_length=500)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
     date_created = models.DateTimeField()
