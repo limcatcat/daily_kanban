@@ -31,11 +31,11 @@ class CustomAuthToken(ObtainAuthToken):
 class HomeView(TemplateView):
     template_name = "frontend/index.html"
 
-@login_required
+# @login_required
 class StatsView(TemplateView):
     template_name = "frontend/stats.html"
 
-@login_required
+# @login_required
 class TaskListAPIView(APIView):
     def get(self, request):
         
@@ -70,7 +70,7 @@ class TaskListAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
-@login_required
+# @login_required
 @api_view(['PATCH'])
 def update_task_status(request, task_id):
 
@@ -136,7 +136,7 @@ def update_task_status(request, task_id):
         return Response({'error': 'Task not found'}, status=404)
     
 
-@login_required
+# @login_required
 @api_view(['PATCH'])
 def update_task_description(request, task_id):
     try:
@@ -154,7 +154,7 @@ def update_task_description(request, task_id):
         return Response({'error': 'Task not found'}, status=404)
 
 
-@login_required
+# @login_required
 @api_view(['PATCH'])
 def delete_task(request, task_id):
     try:
