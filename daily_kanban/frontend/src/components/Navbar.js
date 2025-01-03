@@ -22,13 +22,15 @@ const Navbar = () => {
             </button>
           <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div className="navbar-nav">
-                <a className="nav-link" href="{% url 'frontend:home' %}">Daily Kanban</a>
-                <a className="nav-link" href="{% url 'frontend:home' %}">Board</a>
-                <a className="nav-link" href="{% url 'frontend:statistics' %}">Statistics</a>
+                <a className="nav-link home" href="{% url 'frontend:home' %}">Daily Kanban</a>
+            <div className='menu-container'>
+                <a className="nav-link board" href="{% url 'frontend:home' %}">Board</a>
+                <a className="nav-link stats" href="{% url 'frontend:statistics' %}">Statistics</a>
+            </div>
 
             {isAuthenticated && 
                 (
-                    <a className='nav-link login' href='#' onClick={handleLogout}>Logout</a>
+                    <a className='nav-link login' href='#' onClick={handleLogout}>Sign out</a>
                 )
             }
 
