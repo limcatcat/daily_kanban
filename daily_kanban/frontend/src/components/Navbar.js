@@ -6,6 +6,7 @@ const Navbar = () => {
 
     const {isAuthenticated, logout} = useContext(AuthContext);
 
+
     const handleLogout = event => {
         event.preventDefault();
         logout();
@@ -25,13 +26,10 @@ const Navbar = () => {
                 <a className="nav-link" href="{% url 'frontend:home' %}">Board</a>
                 <a className="nav-link" href="{% url 'frontend:statistics' %}">Statistics</a>
 
-            {isAuthenticated ? 
+            {isAuthenticated && 
                 (
                     <a className='nav-link login' href='#' onClick={handleLogout}>Logout</a>
                 )
-                : (
-                    <a className="nav-link login" href="/login">Login</a>
-                )   
             }
 
             </div>

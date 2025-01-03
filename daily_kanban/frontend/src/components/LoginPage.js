@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
+import '../../static/css/login-page.css'
 
 const LoginPage = () => {
     const [username, setUsername] = useState('');
@@ -16,24 +17,36 @@ const LoginPage = () => {
     };
 
     return (
-        <div>
-            <h2>Login</h2>
-            <input
-                type="text"
-                value={username}
-                onChange={e => setUsername(e.target.value)}
-                placeholder='Username' 
-            />
-            <input
-                type="password" 
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                placeholder='Password'
-            />
-            <button onClick={handleLogin}>Login</button>
+        <div className="login-container">
+            <h2 className="login-heading">Sign in</h2>
+            <div className="login-inputs">
+                <input
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Username"
+                />
+                <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Password"
+                    onKeyDown={e => {
+                        if (e.key === 'Enter') {
+                            handleLogin();
+                        }
+                    }}
+                />
+            </div>
+            <button className="login-button" onClick={handleLogin}>
+            Sign in
+            </button>
+            <div className="register-link">
+                <a href="/register">Don't have an account yet? Register here</a>
+            </div>
         </div>
     );
-    
+
 };
 
 export default LoginPage;

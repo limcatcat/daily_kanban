@@ -17,25 +17,11 @@
     <link rel="stylesheet" href="{% static "css/index.css" %}">
 
 
-    <title>Base</title>
+    <title>Daily Kanban</title>
 </head>
 <body>
 
       <script>
-        function checkAuthStatus() {
-          const token = localStorage.getItem('token');
-          const authLink = document.getElementById('auth-link');
-
-          if (token) {
-            authLink.textContent = 'Logout';
-            authLink.setAttribute = ('href', '#');
-            authLink.onclick = logout;
-          } else {
-            authLink.textContent = 'Login';
-            authLink.setAttribute('href', '/login');
-            authLink.onclick = login;
-          }
-        }
 
         function login(event) {
           event.preventDefault();
@@ -44,11 +30,9 @@
 
         function logout(event) {
           event.preventDefault();
-          checkAuthStatus();
           window.logoutFunction();
         }
 
-        checkAuthStatus();
       </script>
     {% block content %}
     {% endblock %}
