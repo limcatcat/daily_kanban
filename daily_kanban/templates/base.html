@@ -23,7 +23,7 @@
 
       <script>
 
-        function login(event) {
+        {% comment %} function login(event) {
           event.preventDefault();
           window.loginFunction('username', 'password');
         }
@@ -31,7 +31,7 @@
         function logout(event) {
           event.preventDefault();
           window.logoutFunction();
-        }
+        } {% endcomment %}
 
       </script>
     {% block content %}

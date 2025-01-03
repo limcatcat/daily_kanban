@@ -41,11 +41,11 @@ export const AuthProvider = ({children}) => {
     }
 
 
-    // expose login and logout globally so that they can be called from outside React app
-    useEffect(() => {
-        window.loginFunction = login;
-        window.logoutFunction = logout;
-    }, [login, logout]);
+    // // expose login and logout globally so that they can be called from outside React app
+    // useEffect(() => {
+    //     window.loginFunction = login;
+    //     window.logoutFunction = logout;
+    // }, [login, logout]);
 
 
     return (
