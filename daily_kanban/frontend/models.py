@@ -1,28 +1,29 @@
 from django.db import models
 from django.db.models import UniqueConstraint
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import User
+# from django.contrib.auth.models import AbstractUser
+# from django.contrib.auth.hashers import make_password
 
 # Create your models here.
 
-class CustomUser(models.Model):
-    user_id = models.CharField(max_length=30, primary_key=True)
-    username = models.CharField(max_length=30)
-    password = models.CharField(max_length=128)
-    email = models.EmailField(unique=True)
-    date_created = models.DateTimeField()
-    date_updated = models.DateTimeField(null=True, blank=True)
+# class CustomUser(AbstractUser):
+#     username = models.CharField(unique=True, primary_key=True, max_length=30)
+#     password = models.CharField(max_length=128)
+#     email = models.EmailField(unique=True)
+#     date_created = models.DateTimeField()
+#     date_updated = models.DateTimeField(null=True, blank=True)
 
-    def set_password(self, raw_password):
-        self.password = make_password(raw_password)
+#     def set_password(self, raw_password):
+#         self.password = make_password(raw_password)
 
-    def check_password(self, raw_password):
-        from django.contrib.auth.hashers import check_password
-        return check_password(raw_password, self.password)
+#     def check_password(self, raw_password):
+#         from django.contrib.auth.hashers import check_password
+#         return check_password(raw_password, self.password)
     
-    def save(self, *args, **kwargs):
-        if self.password:
-            self.password = make_password(self.password)
-        super().save(*args, **kwargs)
+#     def save(self, *args, **kwargs):
+#         if self.password:
+#             self.password = make_password(self.password)
+#         super().save(*args, **kwargs)
 
 
 class Task(models.Model):
@@ -35,7 +36,7 @@ class Task(models.Model):
     )
     
 
-    user = models.ForeignKey(CustomUser, default='quokka', on_delete=models.CASCADE) # change later after implementing user authentication
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     description = models.CharField(max_length=500)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
     date_created = models.DateTimeField()

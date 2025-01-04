@@ -1,8 +1,7 @@
 import React, { useContext, useState } from 'react';
 import KanbanBoard from './KanbanBoard';
 import WeekView from './WeekView';
-import { TaskProvider } from '../context/TaskContext.js';
-import { AuthProvider, AuthContext } from '../context/AuthContext.js';
+import { AuthContext } from '../context/AuthContext.js';
 import Navbar from './Navbar.js';
 import LoginPage from './LoginPage.js';
 
@@ -15,7 +14,7 @@ function App() {
     // const [showBacklog, setShowBacklog] = useState(true);
 
     return(
-        <TaskProvider>
+        <>
             <Navbar />
             <div className='main-container'>
                 {isAuthenticated ? (
@@ -36,8 +35,7 @@ function App() {
                     <LoginPage />
                 )}
             </div>
-
-        </TaskProvider>
+        </>
     );
     
 }

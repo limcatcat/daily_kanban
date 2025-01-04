@@ -12,6 +12,9 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import get_authorization_header
+from django.contrib.auth import logout as django_logout
 
 
 
@@ -28,6 +31,15 @@ class CustomAuthToken(ObtainAuthToken):
         return Response({'token': token.key})
     
 
+class LogoutAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        print(f'Authenticated user: {request.user}')
+        django_logout(request)
+        return Response({'message': 'Logged out successfully'})
+    
+
 class HomeView(TemplateView):
     template_name = "frontend/index.html"
 
@@ -37,8 +49,29 @@ class StatsView(TemplateView):
 
 # @login_required
 class TaskListAPIView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         
+        print(f'Authenticated user: {request.user}') # need to debug it
+        print(f"Authorization header: {request.META.get('HTTP_AUTHORIZATION')}")
+        auth_header = get_authorization_header(request).decode('utf-8')
+        print(f"Authorization header (from DRF helper): {auth_header}")
+
+        if auth_header and auth_header.startswith('Bearer '):
+            token_key = auth_header.split(' ')[1]
+
+            try:
+                token = Token.objects.get(key=token_key)
+                user = token.user
+                print(f"Token user: {user}")
+            except Token.DoesNotExist:
+                return Response({'error': 'Invalid token'}, status=status.HTTP_401_UNAUTHORIZED)
+            
+        else:
+            return Response({'error': 'Authorization header missing or malformed'}, status=status.HTTP_401_UNAUTHORIZED)
+
         selected_date = request.query_params.get('date')
         if not selected_date:
             selected_date = date.today()
@@ -50,11 +83,14 @@ class TaskListAPIView(APIView):
                 return Response({'error': 'Invalid date format'}, status=status.HTTP_400_BAD_REQUEST)
 
         tasks = Task.objects.filter(
-            Q(status='0') |
-            Q(status='1', date_assigned__date__lte=selected_date) |
-            Q(status='2', date_assigned__date__lte=selected_date) |
-            Q(status='3', date_done__date=selected_date),
-            archived=False)
+            user=user,
+            archived=False).filter(
+                Q(status='0') |
+                Q(status='1', date_assigned__date__lte=selected_date) |
+                Q(status='2', date_assigned__date__lte=selected_date) |
+                Q(status='3', date_done__date=selected_date)
+            )
+
         serializer = TaskSerializer(tasks, many=True)
         return Response(serializer.data)
     

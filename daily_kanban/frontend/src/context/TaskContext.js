@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
+import { AuthContext } from "./AuthContext";
 
 const TaskContext = createContext();
 
@@ -23,7 +24,11 @@ export function TaskProvider({ children }) {
     const fetchTasks = async (date) => {
 
         const csrftoken = document.querySelector('[name=csrf-token]').content;
+        const token = localStorage.getItem('token');
         const formattedDate = date.toLocaleDateString('en-CA');
+
+        console.log('Token being sent', token);
+        
 
         try {
             const response = await fetch(`/tasks?date=${formattedDate}`, {
@@ -31,6 +36,7 @@ export function TaskProvider({ children }) {
                 headers: {
                     'Content-type': 'application/json',
                     'X-CSRFToken': csrftoken,
+                    'Authorization': `Bearer ${token}`,
                 },
             });
             if (!response.ok) throw new Error('Failed to fetch tasks');

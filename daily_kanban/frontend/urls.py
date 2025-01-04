@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import HomeView, StatsView, TaskListAPIView, update_task_status, update_task_description, delete_task, CustomAuthToken
+from .views import HomeView, StatsView, TaskListAPIView, update_task_status, update_task_description, delete_task, CustomAuthToken, LogoutAPIView
 
 app_name = 'frontend'
 
@@ -12,4 +12,5 @@ urlpatterns = [
     path('tasks/<int:task_id>/update-description/', update_task_description, name='update_task_description'),
     path('tasks/<int:task_id>/delete/', delete_task, name='delete_task'),
     path('api/login/', CustomAuthToken.as_view(), name='api_login'),
+    path('api/logout/', LogoutAPIView.as_view(), name='api_logout')
 ]

@@ -225,12 +225,14 @@ function KanbanBoard() {
 
     const handleAddTask = description => {
         const csrftoken = document.querySelector('[name=csrf-token').content;
+        const token = localStorage.getItem('token');
 
         fetch('/tasks/', {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
                 'X-CSRFToken': csrftoken,
+                'Authorization': `Bearer ${token}`,
             },
             body: JSON.stringify({ description, status: '0', date_created: format(new Date(), "yyyy-MM-dd'T'hh:mm:ss")}),
         })
