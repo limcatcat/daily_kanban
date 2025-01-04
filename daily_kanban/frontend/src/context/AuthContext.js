@@ -15,7 +15,7 @@ export const AuthProvider = ({children}) => {
 
     const login = async (username, password) => {
         try {
-            const response = await fetch('/api/login/', {
+            const response = await fetch('/api/auth/login/', {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
@@ -26,12 +26,12 @@ export const AuthProvider = ({children}) => {
     
             if (response.ok) {
                 const data = await response.json();
-                localStorage.setItem('token', data.token);
-                setToken(data.token);
+                localStorage.setItem('token', data.key);
+                setToken(data.key);
                 setIsAuthenticated(true);
                 console.log(`Signed in with: ${username}`);
                 
-                return data.token;
+                return data.key;
             } else {
                 const errorData = await response.json();
                 console.error('Login failed:', errorData);
@@ -43,34 +43,32 @@ export const AuthProvider = ({children}) => {
         }
     };
 
-    // const logout = async () => {
+    const logout = async () => {
 
-    //     const token_latest = localStorage.getItem('token');
+        const response = await fetch('/api/auth/logout/', {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': `Token ${token}`,
+            },
+        });
 
-    //     const response = await fetch('/api/logout/', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-type': 'application/json',
-    //             'Authorization': `Bearer ${token_latest}`,
-    //         },
-    //     });
-
-    //     if (response.ok) {
-    //         localStorage.removeItem('token');
-    //         setToken(null);
-    //         setIsAuthenticated(false);
-    //         console.log('Logged out successfully');
-    //     } else {
-    //         console.error('Logout failed');
-    //     }
-    // };
-
-    const logout = () => {
+        if (response.ok) {
             localStorage.removeItem('token');
             setToken(null);
             setIsAuthenticated(false);
             console.log('Logged out successfully');
-    }
+        } else {
+            console.error('Logout failed');
+        }
+    };
+
+    // const logout = () => {
+    //         localStorage.removeItem('token');
+    //         setToken(null);
+    //         setIsAuthenticated(false);
+    //         console.log('Logged out successfully');
+    // }
 
 
     // // expose login and logout globally so that they can be called from outside React app

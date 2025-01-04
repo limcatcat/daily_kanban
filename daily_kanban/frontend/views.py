@@ -9,12 +9,12 @@ from .serializers import TaskSerializer
 from django.utils import timezone
 from datetime import datetime, date
 from django.db.models import Q
-from django.contrib.auth.decorators import login_required
-from rest_framework.authtoken.views import ObtainAuthToken
+# from django.contrib.auth.decorators import login_required
+# from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import get_authorization_header
-from django.contrib.auth import logout as django_logout
+# from django.contrib.auth import logout as django_logout
 
 
 
@@ -22,22 +22,22 @@ from django.contrib.auth import logout as django_logout
 # def index(request, *args, **kwargs):
 #     return render(request, "frontend/index.html")
 
-class CustomAuthToken(ObtainAuthToken):
-    def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data, context={'request': request})
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        token, created = Token.objects.get_or_create(user=user)
-        return Response({'token': token.key})
+# class CustomAuthToken(ObtainAuthToken):
+#     def post(self, request, *args, **kwargs):
+#         serializer = self.serializer_class(data=request.data, context={'request': request})
+#         serializer.is_valid(raise_exception=True)
+#         user = serializer.validated_data['user']
+#         token, created = Token.objects.get_or_create(user=user)
+#         return Response({'token': token.key})
     
 
-class LogoutAPIView(APIView):
-    permission_classes = [IsAuthenticated]
+# class LogoutAPIView(APIView):
+#     permission_classes = [IsAuthenticated]
 
-    def post(self, request):
-        print(f'Authenticated user: {request.user}')
-        django_logout(request)
-        return Response({'message': 'Logged out successfully'})
+#     def post(self, request):
+#         print(f'Authenticated user: {request.user}')
+#         django_logout(request)
+#         return Response({'message': 'Logged out successfully'})
     
 
 class HomeView(TemplateView):
