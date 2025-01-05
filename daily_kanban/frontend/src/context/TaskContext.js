@@ -28,24 +28,31 @@ export function TaskProvider({ children }) {
         const formattedDate = date.toLocaleDateString('en-CA');
 
         console.log('Token being sent', token);
+
+        if (!!token) {
+            
+            try {
+                const response = await fetch(`/tasks?date=${formattedDate}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-type': 'application/json',
+                        'X-CSRFToken': csrftoken,
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+                if (!response.ok) throw new Error('Failed to fetch tasks');
+                const data = await response.json();
+                setTasks(data);
+            } catch (error) {
+                console.error('Error fetching tasks:', error);
+            }
+        
+        } else {
+            console.log('Please sign in to fetch tasks');         
+        };
+    }
         
 
-        try {
-            const response = await fetch(`/tasks?date=${formattedDate}`, {
-                method: 'GET',
-                headers: {
-                    'Content-type': 'application/json',
-                    'X-CSRFToken': csrftoken,
-                    'Authorization': `Bearer ${token}`,
-                },
-            });
-            if (!response.ok) throw new Error('Failed to fetch tasks');
-            const data = await response.json();
-            setTasks(data);
-        } catch (error) {
-            console.error('Error fetching tasks:', error);
-        }
-    };
 
 
     const handleMonthChange = (selectedDate) => {
