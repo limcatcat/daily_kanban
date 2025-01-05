@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
-import { AuthContext } from "./AuthContext";
+
 
 const TaskContext = createContext();
 
@@ -60,7 +60,7 @@ export function TaskProvider({ children }) {
 
 
     return (
-        <TaskContext.Provider value={{ tasks, setTasks, activeId, setActiveId, selectedDate, setSelectedDate, selectedMonth }}>
+        <TaskContext.Provider value={{ tasks, setTasks, activeId, setActiveId, selectedDate, setSelectedDate, selectedMonth, fetchTasks }}>
             {children}
         </TaskContext.Provider>
     );

@@ -1,4 +1,5 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
+
 
 export const AuthContext = createContext();
 
@@ -6,12 +7,12 @@ export const AuthProvider = ({children}) => {
     const [token, setToken] = useState(localStorage.getItem('token') || null);
     const [isAuthenticated, setIsAuthenticated] = useState(!!token);
 
+
     const csrftoken = document.querySelector('[name=csrf-token]').content;
 
     useEffect(() => {
         setIsAuthenticated(!!token);
     }, [token]);
-
 
     const login = async (username, password) => {
         try {
@@ -30,6 +31,11 @@ export const AuthProvider = ({children}) => {
                 setToken(data.key);
                 setIsAuthenticated(true);
                 console.log(`Signed in with: ${username}`);
+
+                // if (fetchTasks) {
+                //     fetchTasks(new Date());
+                //     console.log(`Tasks fetched for ${username}`);
+                // }
                 
                 return data.key;
             } else {

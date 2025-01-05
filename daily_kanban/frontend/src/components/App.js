@@ -8,8 +8,7 @@ import LoginPage from './LoginPage.js';
 
 function App() {
 
-    const {isAuthenticated, logout} = useContext(AuthContext);
-
+    const {isAuthenticated} = useContext(AuthContext);
     // const [selectedDate, setSelectedDate] = useState(new Date());
     // const [showBacklog, setShowBacklog] = useState(true);
 
@@ -25,9 +24,7 @@ function App() {
                         </div>
                                 
                         <div className='main-content'>
-                    
                             <KanbanBoard />
-                        
                         </div>
                     </>
                 ) : (

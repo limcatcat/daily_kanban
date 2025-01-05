@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
+import { fetchTasks } from '../context/TaskContext';
 import '../../static/css/login-page.css'
 
 const LoginPage = () => {
