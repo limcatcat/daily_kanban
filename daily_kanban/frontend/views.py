@@ -9,45 +9,32 @@ from .serializers import TaskSerializer
 from django.utils import timezone
 from datetime import datetime, date
 from django.db.models import Q
-# from django.contrib.auth.decorators import login_required
-# from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import get_authorization_header
-# from django.contrib.auth import logout as django_logout
+from django.urls import reverse
+from django.http import JsonResponse
 
 
 
 # Create your views here.
-# def index(request, *args, **kwargs):
-#     return render(request, "frontend/index.html")
 
-# class CustomAuthToken(ObtainAuthToken):
-#     def post(self, request, *args, **kwargs):
-#         serializer = self.serializer_class(data=request.data, context={'request': request})
-#         serializer.is_valid(raise_exception=True)
-#         user = serializer.validated_data['user']
-#         token, created = Token.objects.get_or_create(user=user)
-#         return Response({'token': token.key})
-    
+def get_nav_urls(request):
+    return JsonResponse({
+        'home': reverse('frontend:home'),
+        'board': reverse('frontend:home'),
+        'stats': reverse('stats:stats'),
+    })
 
-# class LogoutAPIView(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def post(self, request):
-#         print(f'Authenticated user: {request.user}')
-#         django_logout(request)
-#         return Response({'message': 'Logged out successfully'})
-    
 
 class HomeView(TemplateView):
     template_name = "frontend/index.html"
 
-# @login_required
+
 class StatsView(TemplateView):
     template_name = "frontend/stats.html"
 
-# @login_required
+
 class TaskListAPIView(APIView):
 
     permission_classes = [IsAuthenticated]
@@ -106,7 +93,7 @@ class TaskListAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
-# @login_required
+
 @api_view(['PATCH'])
 def update_task_status(request, task_id):
 
@@ -172,7 +159,7 @@ def update_task_status(request, task_id):
         return Response({'error': 'Task not found'}, status=404)
     
 
-# @login_required
+
 @api_view(['PATCH'])
 def update_task_description(request, task_id):
     try:
@@ -190,7 +177,7 @@ def update_task_description(request, task_id):
         return Response({'error': 'Task not found'}, status=404)
 
 
-# @login_required
+
 @api_view(['PATCH'])
 def delete_task(request, task_id):
     try:

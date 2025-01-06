@@ -1,10 +1,18 @@
-import React, { useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 
 
 const Navbar = () => {
 
+    const [urls, setUrls] = useState({});
     const {isAuthenticated, logout} = useContext(AuthContext);
+
+
+    useEffect(() => {
+        fetch('/api/nav-urls/')
+            .then(response => response.json())
+            .then(data => setUrls(data));
+    }, []);
 
 
     const handleLogout = event => {
@@ -22,10 +30,10 @@ const Navbar = () => {
             </button>
           <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div className="navbar-nav">
-                <a className="nav-link home" href="{% url 'frontend:home' %}">Daily Kanban</a>
+                <a className="nav-link home" href={urls.home}>Daily Kanban</a>
             <div className='menu-container'>
-                <a className="nav-link board" href="{% url 'frontend:home' %}">Board</a>
-                <a className="nav-link stats" href="{% url 'frontend:statistics' %}">Statistics</a>
+                <a className="nav-link board" href={urls.home}>Board</a>
+                <a className="nav-link stats" href={urls.stats}>Statistics</a>
             </div>
 
             {isAuthenticated && 

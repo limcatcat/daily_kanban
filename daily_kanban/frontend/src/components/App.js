@@ -4,6 +4,8 @@ import WeekView from './WeekView';
 import { AuthContext } from '../context/AuthContext.js';
 import Navbar from './Navbar.js';
 import LoginPage from './LoginPage.js';
+import Stats from './Stats.js';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 
 function App() {
@@ -13,26 +15,38 @@ function App() {
     // const [showBacklog, setShowBacklog] = useState(true);
 
     return(
-        <>
+
+        <Router>
             <Navbar />
             <div className='main-container'>
-                {isAuthenticated ? (
-                    // User authenticated
-                    <>
-                        <div className='week'>
-                            <WeekView />
-                        </div>
-                                
-                        <div className='main-content'>
-                            <KanbanBoard />
-                        </div>
-                    </>
-                ) : (
-                    // User not authenticated
-                    <LoginPage />
-                )}
+               <Routes>
+                    {!isAuthenticated ? (
+                        <Route path='*' element={<LoginPage />} />
+                    ) : (
+                        <>
+
+                            <Route path='*' element={
+                                <>
+                                    <div className='week'>
+                                        <WeekView />
+                                    </div>
+                                            
+                                    <div className='main-content'>
+                                        <KanbanBoard />
+                                    </div>
+                                </>    
+                            } />
+
+                            <Route path='/stats' element={<Stats />} />
+                            <Route path='*' element={<Navigate to='*' />} />
+
+                        </>
+
+                    )}
+                </Routes>
             </div>
-        </>
+        </Router>
+
     );
     
 }
