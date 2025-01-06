@@ -86,7 +86,7 @@ class TaskListAPIView(APIView):
         data['status'] = data.get('status', '0')
         data['date_created'] = data.get('date_created')
 
-        serializer = TaskSerializer(data=data)
+        serializer = TaskSerializer(data=data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
