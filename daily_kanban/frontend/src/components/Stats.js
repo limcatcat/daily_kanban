@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
+// import { useContext, useTaskContext } from '../context/TaskContext';
+// import Task from './Task';
+// import '../../static/css/task.css';
+// import '../../static/css/index.css';
+import StatsBox from './StatsBox';
+import '../../static/css/stats.css';
+
 
 const Stats = () => {
+
+    // const {tasks} = useTaskContext();
 
     const [stats, setStats] = useState({
         total_completed: 0,
@@ -9,6 +18,9 @@ const Stats = () => {
         average_completed_tasks_per_day: 0,
         completed_percentage: 0
     });
+
+
+    // const completedTasks = tasks.filter(task => task.status === '3');
 
     const fetchStatistics = async () => {
         try {
@@ -53,22 +65,40 @@ const Stats = () => {
 
 
     return (
-        <div>
-            <h1>Task Statistics</h1>
-            <ul>
-                <li><strong>So far, you've completed </strong>{stats.total_completed} tasks, and that's {stats.completed_percentage}% of your tasks. Well done! 👏🏻</li>
-                <li>
-                    <strong>This week, you're most productive on </strong> 
-                    {resultParser(stats.most_productive_day_this_week)}
-                </li>
-                <li>
-                    <strong>In general, you're most productive on </strong> 
-                    {stats.most_productive_day_overall.weekday}s, completing an average of {stats.most_productive_day_overall.count} tasks
-                </li>
-                <li><strong>Each day, you finished on average</strong> {stats.average_completed_tasks_per_day} tasks</li>
-            </ul>
+
+        <div className='grid-container'>
+
+            <StatsBox
+                title='Total Completed Tasks'
+                value={stats.total_completed}
+                description={`That's ${stats.completed_percentage}% of your tasks!`}
+                icon="✅"
+            />
+
+            <StatsBox
+                title="Average Tasks Per Day"
+                value={stats.average_completed_tasks_per_day.toFixed(2)}
+                icon="📈"
+            />
+
+            <StatsBox 
+                title="Most Productive Day This Week"
+                value={stats.most_productive_day_this_week.day || 'No data'}
+                description={`Completed ${stats.most_productive_day_this_week.count} tasks`}
+                icon="📅"
+            />
+
+            <StatsBox
+                title="Most Productive Day (Overall)"
+                value={stats.most_productive_day_overall.weekday || 'No data'}
+                description={`Average of ${stats.most_productive_day_overall.count} tasks`}
+                icon="🥇"
+            />
+
+
         </div>
-    )
+
+    );
 
 }
 

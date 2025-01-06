@@ -84,7 +84,11 @@ class StatsAPIView(APIView):
 
             # calculate the number of weeks since the earliest date in date_done
         today = timezone.now().date()
-        number_of_weeks = (today - earliest_date.date()).days // 7 # number of complete weeks (integer division)
+
+        if earliest_date:
+            number_of_weeks = (today - earliest_date.date()).days // 7 # number of complete weeks (integer division)
+        else:
+            number_of_weeks = 1
 
         # print(f'number of weeks: {number_of_weeks}')
         # print(f'weekday of today: {today.weekday()}')
@@ -114,14 +118,24 @@ class StatsAPIView(APIView):
 
         avg_completed_by_weekday.sort(key=lambda x: x['completed_avg'], reverse=True)
 
-        most_productive_day_overall = {
-            'weekday':avg_completed_by_weekday[0]['weekday'],
-            'count': avg_completed_by_weekday[0]['completed_avg']
-        }
+        if avg_completed_by_weekday[0]['completed_avg'] != 0:
+            most_productive_day_overall = {
+                'weekday': avg_completed_by_weekday[0]['weekday'],
+                'count': avg_completed_by_weekday[0]['completed_avg']
+            }
+        else:
+            most_productive_day_overall = {
+            'weekday': 'none',
+            'count': 0
+            }
 
 
         # 3. the average number of completed tasks per day
-        number_of_days = (today - earliest_date.date()).days
+        if earliest_date:
+            number_of_days = (today - earliest_date.date()).days
+        else:
+            number_of_days = 1
+
         avg_per_day = round(total_completed_tasks_count / number_of_days, 2)
 
         print(f'number of days: {number_of_days}, avg per day: {avg_per_day}')
