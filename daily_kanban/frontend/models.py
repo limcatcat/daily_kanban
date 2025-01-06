@@ -49,3 +49,6 @@ class Task(models.Model):
         constraints = [
             UniqueConstraint(fields=['description', 'date_created'], name='Task_composite_primary_key')
         ]
+
+    def __str__(self):
+        return f'user: {self.user}, status: {self.status}, date_done: {self.date_done}'

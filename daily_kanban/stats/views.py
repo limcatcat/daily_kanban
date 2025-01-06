@@ -8,9 +8,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from frontend.models import Task
 from frontend.serializers import TaskSerializer
-from django.db.models import Count, Func
+from django.db.models import Count, Min
 from django.http import JsonResponse
 from django.views.generic import TemplateView
+from django.db.models.functions import TruncDate, ExtractIsoWeekDay
+from django.utils import timezone
+from math import ceil
 
 # Create your views here.
 class StatsView(TemplateView):
@@ -19,15 +22,9 @@ class StatsView(TemplateView):
 
 # helper function
 def get_start_of_week():
-    today = datetime.today()
+    today = datetime.today().date()
     start_of_week = today - timedelta(days=today.weekday())
     return start_of_week
-
-# for weekday extraction
-class Weekday(Func):
-    function = 'strftime'
-    template = "%(function)s('%w', %(expressions)s)"
-    arity = 1
 
 
 class StatsAPIView(APIView):
@@ -51,60 +48,101 @@ class StatsAPIView(APIView):
             return Response({'error': 'Authorization header missing or malformed'}, status=status.HTTP_401_UNAUTHORIZED)
         
         
-        total_completed_tasks = Task.objects.filter(
+        total_completed_tasks_count = Task.objects.filter(
             user=user,
             archived=False,
             status='3').count()
         
 
-        # the most productive day of this week
+
+        # 1. the most productive day of this week
         start_of_week = get_start_of_week()
-        tasks_completed_this_week = list(Task.objects.filter(
+        tasks_completed_this_week = Task.objects.filter(
             user=user,
             status='3',
             date_done__gte=start_of_week
-        ).values('date_done').annotate(completed_count=Count('id')).order_by('-completed_count'))
+        ).annotate(date_done_date=TruncDate('date_done')).values('date_done_date').annotate(completed_count=Count('id')).order_by('-completed_count')
 
-        most_productive_day_this_week = tasks_completed_this_week[0] if tasks_completed_this_week else None
-
-
-        # # the most productive day of the week (average tasks completed on each weekday)
-        # completed_by_weekday = Task.objects.filter(user=user, archived=False, status='3').annotate(
-        #     weekday=Weekday('date_done')
-        # ).values('weekday').annotate(completed_count=Count('id')).order_by('-completed_count')
-
-        # most_productive_day_overall = completed_by_weekday[0] if completed_by_weekday else None
-
-
-        # the average number of completed tasks per day
-        # completed_tasks_per_day = Task.objects.filter(user=user, status='3').values('date_done').annotate(completed_count=Count('id'))
-        # total_completed_days = len(completed_tasks_per_day)
-        # average_completed_tasks_per_day = total_completed_tasks / total_completed_days if total_completed_days else 0
-
-
-        # # the percentage of unfinished tasks
-        # total_tasks = Task.objects.filter(user=user, archived=False).count()
-        # unfinished_tasks = Task.objects.filter(
-        #     user=user, 
-        #     status__in=['0', '1', '2']
-        # ).count()
+        tasks_completed_this_week = list(tasks_completed_this_week)
         
-        # if total_tasks > 0:
-        #     unfinished_percentage = (unfinished_tasks / total_tasks) * 100
-        #     completed_percentage = (total_completed_tasks / total_tasks) * 100
-        # else:
-        #     unfinished_percentage = 0
-        #     completed_percentage = 0
+        print(f'tasks_completed_this_week: {tasks_completed_this_week}')
+
+        if tasks_completed_this_week:
+            most_productive_day_this_week = {
+                'date': tasks_completed_this_week[0]['date_done_date'],
+                'day': tasks_completed_this_week[0]['date_done_date'].strftime('%A'),
+                'count': tasks_completed_this_week[0]['completed_count']
+            }
+        else:
+            most_productive_day_this_week= {'date': 'none', 'day': 'none', 'count': 0}
+
+
+
+        # 2. the most productive day of the week (average tasks completed on each weekday)
+            # get the earliest date done
+        earliest_date = Task.objects.filter(user=user, archived=False, status='3').aggregate(Min('date_done'))['date_done__min']
+
+            # calculate the number of weeks since the earliest date in date_done
+        today = timezone.now().date()
+        number_of_weeks = (today - earliest_date.date()).days // 7 # number of complete weeks (integer division)
+
+        # print(f'number of weeks: {number_of_weeks}')
+        # print(f'weekday of today: {today.weekday()}')
+
+        weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+
+        completed_by_weekday = Task.objects.filter(user=user, archived=False, status='3').annotate(weekday=ExtractIsoWeekDay('date_done')
+        ).values('weekday').annotate(completed_count=Count('id')).order_by('weekday')
+
+        avg_completed_by_weekday = []
+
+        for i, weekday in enumerate(weekdays):
+            total_completed = sum(task['completed_count'] for task in completed_by_weekday if task['weekday'] == i + 1)
+
+            if today.weekday() >= i:
+                average = round(total_completed / (number_of_weeks + 1), 2)
+            else:
+                average = round(total_completed / number_of_weeks, 2)
+
+            avg_completed_by_weekday.append({
+                'weekday': weekday,
+                'completed_avg': average
+            })
+
+        for entry in avg_completed_by_weekday:
+            print(f"{entry['weekday']}: {entry['completed_avg']:.2f} tasks/week")
+
+        avg_completed_by_weekday.sort(key=lambda x: x['completed_avg'], reverse=True)
+
+        most_productive_day_overall = {
+            'weekday':avg_completed_by_weekday[0]['weekday'],
+            'count': avg_completed_by_weekday[0]['completed_avg']
+        }
+
+
+        # 3. the average number of completed tasks per day
+        number_of_days = (today - earliest_date.date()).days
+        avg_per_day = round(total_completed_tasks_count / number_of_days, 2)
+
+        print(f'number of days: {number_of_days}, avg per day: {avg_per_day}')
+
+
+        # 4. the percentage of unfinished tasks
+        total_tasks_count = Task.objects.filter(user=user, archived=False).count()
+        
+        if total_tasks_count > 0:
+            completed_percentage = round((total_completed_tasks_count / total_tasks_count) * 100, 2)
+        else:
+            completed_percentage = 0
 
 
         # results
         stats = {
-            'total_completed': total_completed_tasks,
+            'total_completed': total_completed_tasks_count,
             'most_productive_day_this_week': most_productive_day_this_week,
-            # 'most_productive_day_overall': most_productive_day_overall,
-            # 'average_completed_tasks_per_day': average_completed_tasks_per_day,
-            # 'unfinished_percentage': unfinished_percentage,
-            # 'completed_percentage': completed_percentage
+            'most_productive_day_overall': most_productive_day_overall,
+            'average_completed_tasks_per_day': avg_per_day,
+            'completed_percentage': completed_percentage
         }
 
         return JsonResponse(stats)
