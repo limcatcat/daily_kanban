@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { fetchTasks } from '../context/TaskContext';
+import { Link } from 'react-router-dom';
 import '../../static/css/login-page.css'
 
 const LoginPage = () => {
@@ -43,7 +43,7 @@ const LoginPage = () => {
             Sign in
             </button>
             <div className="register-link">
-                <a href="/register">Don't have an account yet? Register here</a>
+                <Link to="/register">Don't have an account yet? Register here</Link>
             </div>
         </div>
     );

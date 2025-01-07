@@ -10,10 +10,11 @@ from django.utils import timezone
 from datetime import datetime, date
 from django.db.models import Q
 from rest_framework.authtoken.models import Token
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authentication import get_authorization_header
 from django.urls import reverse
 from django.http import JsonResponse
+from .serializers import UserRegistrationSerializer
 
 
 
@@ -186,4 +187,18 @@ def delete_task(request, task_id):
         task.save()
         return Response({'message': 'Task deleted successfully'}, status=200)
     except Task.DoesNotExist:
-        return Response({'error': 'Task not found'}, status=404)    
+        return Response({'error': 'Task not found'}, status=404)
+    
+
+
+
+class RegisterAPIView(APIView):
+
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = UserRegistrationSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            return Response({'success': 'User registered successfully!'}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

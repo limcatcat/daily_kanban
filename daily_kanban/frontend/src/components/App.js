@@ -6,6 +6,7 @@ import Navbar from './Navbar.js';
 import LoginPage from './LoginPage.js';
 import Stats from './Stats.js';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import RegisterPage from './RegisterPage.js';
 
 
 function App() {
@@ -20,6 +21,9 @@ function App() {
             <Navbar />
             <div className='main-container'>
                <Routes>
+                    <Route path='/register' element={<RegisterPage />} />
+                    {/* this Route should be outside isAuthenticated check block */}
+                    
                     {!isAuthenticated ? (
                         <Route path='*' element={<LoginPage />} />
                     ) : (
