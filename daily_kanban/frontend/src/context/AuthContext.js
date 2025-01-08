@@ -66,12 +66,15 @@ export const AuthProvider = ({children}) => {
                     console.log('Logged out successfully');
                 } else {
                     console.error('Logout failed:', await response.json());
+                    console.log(response.status);
+                    
                     // clear token and reset state if unauthorized
                     if (response.status === 401) {
                         localStorage.removeItem('token');
                         setToken(null);
                         setIsAuthenticated(false);
                         console.warn('Token was invalid. Token has been cleared from storage.');
+                    } else {console.log('Status is not 401.');
                     }
                 }
         } catch (error) {
@@ -113,7 +116,7 @@ export const AuthProvider = ({children}) => {
     
         verifyToken();
     }, []);
-    
+
 
     // const logout = () => {
     //         localStorage.removeItem('token');
