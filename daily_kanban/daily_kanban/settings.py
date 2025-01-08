@@ -31,8 +31,10 @@ SECRET_KEY = 'django-insecure-3o79_=+*nh)5l+avu=)%wb_4c(p#@cjb3-obz81bp7o!9(z+c*
 DEBUG = False
 
 ALLOWED_HOSTS = [
+    'daily-kanban.com',
     'daily-kanban.onrender.com',
     'daily-kanban-backend.onrender.com',
+    '127.0.0.1', 'localhost',
 ]
 
 
@@ -80,8 +82,10 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:8001',
     'https://daily-kanban.onrender.com',
     'https://daily-kanban-backend.onrender.com',
-    # 'http://dailykanban.com',
-    # 'https://dailykanban.com',
+    'http://daily-kanban.com',
+    'https://daily-kanban.com',
+    'http://www.daily-kanban.com',
+    'https://www.daily-kanban.com',
 ]
 
 ROOT_URLCONF = 'daily_kanban.urls'
@@ -115,19 +119,32 @@ WSGI_APPLICATION = 'daily_kanban.wsgi.application'
 #     }
 # }
 
-# DOTENV_FILE = './.env'
-# env_config = Config(RepositoryEnv(DOTENV_FILE))
+# in development
+DOTENV_FILE = './.env'
+env_config = Config(RepositoryEnv(DOTENV_FILE))
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT'),
+        'NAME': env_config.get('DB_NAME'),
+        'USER': env_config.get('DB_USER'),
+        'PASSWORD': env_config.get('DB_PASSWORD'),
+        'HOST': env_config.get('DB_HOST'),
+        'PORT': env_config.get('DB_PORT'),
     }
 }
+
+# in production
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': os.getenv('DB_NAME'),
+#         'USER': os.getenv('DB_USER'),
+#         'PASSWORD': os.getenv('DB_PASSWORD'),
+#         'HOST': os.getenv('DB_HOST'),
+#         'PORT': os.getenv('DB_PORT'),
+#     }
+# }
 
 if not any([os.getenv('DB_NAME'), os.getenv('DB_USER'), os.getenv('DB_PASSWORD')]):
     DATABASES['default'] = {

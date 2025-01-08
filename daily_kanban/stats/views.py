@@ -33,7 +33,19 @@ class StatsAPIView(APIView):
 
     def get(self, request):
 
-        auth_header = get_authorization_header(request).decode('utf-8')
+        # debugging
+        print("Entering StatsAPIView")
+
+        try: # debugging
+               
+            auth_header = get_authorization_header(request).decode('utf-8')
+
+            # debugging
+            print(f"Auth header: {auth_header}")
+        
+        except Exception as e: # debugging
+            print(f"Error decoding authorization header: {e}")
+            return Response({'error': 'Malformed auth header'}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
         if auth_header and auth_header.startswith('Bearer '):
             token_key = auth_header.split(' ')[1]
@@ -41,11 +53,13 @@ class StatsAPIView(APIView):
             try:
                 token = Token.objects.get(key=token_key)
                 user = token.user
+                print(f'***USER IS: {user}***')
+
             except Token.DoesNotExist:
                 return Response({'error': 'Invalid token'}, status=status.HTTP_401_UNAUTHORIZED)
             
         else:
-            return Response({'error': 'Authorization header missing or malformed'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'error': 'Authorization header missing or malformed'}, status=status.HTTP_409_CONFLICT)
         
         
         total_completed_tasks_count = Task.objects.filter(
@@ -63,7 +77,7 @@ class StatsAPIView(APIView):
             date_done__gte=start_of_week
         ).annotate(date_done_date=TruncDate('date_done')).values('date_done_date').annotate(completed_count=Count('id')).order_by('-completed_count')
 
-        tasks_completed_this_week = list(tasks_completed_this_week)
+        # tasks_completed_this_week = list(tasks_completed_this_week)
         
         print(f'tasks_completed_this_week: {tasks_completed_this_week}')
 
@@ -87,6 +101,8 @@ class StatsAPIView(APIView):
 
         if earliest_date:
             number_of_weeks = (today - earliest_date.date()).days // 7 # number of complete weeks (integer division)
+            if number_of_weeks == 0:
+                number_of_weeks = 1
         else:
             number_of_weeks = 1
 
@@ -103,7 +119,7 @@ class StatsAPIView(APIView):
         for i, weekday in enumerate(weekdays):
             total_completed = sum(task['completed_count'] for task in completed_by_weekday if task['weekday'] == i + 1)
 
-            if today.weekday() >= i:
+            if today.weekday()  >= i :
                 average = round(total_completed / (number_of_weeks + 1), 2)
             else:
                 average = round(total_completed / number_of_weeks, 2)
@@ -133,6 +149,8 @@ class StatsAPIView(APIView):
         # 3. the average number of completed tasks per day
         if earliest_date:
             number_of_days = (today - earliest_date.date()).days
+            if number_of_days == 0:
+                number_of_days = 1
         else:
             number_of_days = 1
 
@@ -158,6 +176,15 @@ class StatsAPIView(APIView):
             'average_completed_tasks_per_day': avg_per_day,
             'completed_percentage': completed_percentage
         }
+
+        # # debugging
+        # stats = {
+        #     'total_completed': 1,
+        #     'most_productive_day_this_week': {'date': '1', 'count': 1},
+        #     'most_productive_day_overall': {'weekday': '1', 'count': 0},
+        #     'average_completed_tasks_per_day': 1,
+        #     'completed_percentage': 1
+        # }
 
         return JsonResponse(stats)
 
