@@ -34,7 +34,7 @@ class StatsAPIView(APIView):
     def get(self, request):
 
         # debugging
-        print("Entering StatsAPIView")
+        # print("Entering StatsAPIView")
 
         try: # debugging
                
@@ -53,7 +53,7 @@ class StatsAPIView(APIView):
             try:
                 token = Token.objects.get(key=token_key)
                 user = token.user
-                print(f'***USER IS: {user}***')
+                # print(f'***USER IS: {user}***')
 
             except Token.DoesNotExist:
                 return Response({'error': 'Invalid token'}, status=status.HTTP_401_UNAUTHORIZED)
