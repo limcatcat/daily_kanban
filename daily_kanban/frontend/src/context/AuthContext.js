@@ -10,17 +10,16 @@ export const AuthProvider = ({children}) => {
 
     const csrftoken = document.querySelector('[name=csrf-token]').content;
 
+    // useEffect(() => {
+    //     localStorage.removeItem('token');
+    //     setToken(null);
+    //     setIsAuthenticated(false);
+    //     console.log('User is logged out automatically on app start.');        
+    // }, []);
 
     useEffect(() => {
-        localStorage.removeItem('token');
-        setToken(null);
-        setIsAuthenticated(false);
-        console.log('User is logged out automatically on app start.');        
-    }, []);
-
-    // useEffect(() => {
-    //     setIsAuthenticated(!!token);
-    // }, [token]);
+        setIsAuthenticated(!!token);
+    }, [token]);
 
 
     const login = async (username, password) => {
