@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+from decouple import Config, RepositoryEnv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -77,7 +78,8 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:8000',
     'http://127.0.0.1:8001',
-    'daily-kanban-backend.onrender.com',
+    'https://daily-kanban.onrender.com',
+    'https://daily-kanban-backend.onrender.com',
     # 'http://dailykanban.com',
     # 'https://dailykanban.com',
 ]
@@ -106,12 +108,32 @@ WSGI_APPLICATION = 'daily_kanban.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+DOTENV_FILE = './.env'
+env_config = Config(RepositoryEnv(DOTENV_FILE))
+
 DATABASES = {
     'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': env_config.get('DB_NAME'),
+        'USER': env_config.get('DB_USER'),
+        'PASSWORD': env_config.get('DB_PASSWORD'),
+        'HOST': env_config.get('DB_HOST'),
+        'PORT': env_config.get('DB_PORT'),
+    }
+}
+
+if not any([env_config.get('DB_NAME'), env_config.get('DB_USER'), env_config.get('DB_PASSWORD')]):
+    DATABASES['default'] = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
-}
 
 
 # Password validation
