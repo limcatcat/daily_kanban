@@ -11,9 +11,16 @@ import RegisterPage from './RegisterPage.js';
 
 function App() {
 
-    const {isAuthenticated} = useContext(AuthContext);
+    const {token, setToken, isAuthenticated, setIsAuthenticated} = useContext(AuthContext);
     // const [selectedDate, setSelectedDate] = useState(new Date());
     // const [showBacklog, setShowBacklog] = useState(true);
+
+    useEffect(() => {
+        localStorage.removeItem('token');
+        setToken(null);
+        setIsAuthenticated(false);
+        console.log('User is logged out automatically on app start.');
+    }, []);
 
     return(
 
