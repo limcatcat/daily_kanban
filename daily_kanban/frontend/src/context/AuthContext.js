@@ -49,83 +49,52 @@ export const AuthProvider = ({children}) => {
         }
     };
 
-    const logout = async () => {
-        try {
-                const response = await fetch('/api/auth/logout/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-type': 'application/json',
-                        'Authorization': `Token ${token}`,
-                    },
-                });
+
+
+    // const logout = async () => {
+    //     try {
+    //             const response = await fetch('/api/auth/logout/', {
+    //                 method: 'POST',
+    //                 headers: {
+    //                     'Content-type': 'application/json',
+    //                     'Authorization': `Token ${token}`,
+    //                 },
+    //             });
         
-                if (response.ok) {
-                    localStorage.removeItem('token');
-                    setToken(null);
-                    setIsAuthenticated(false);
-                    console.log('Logged out successfully');
-                } else {
-                    console.error('Logout failed');
-                    console.log(response.status);
+    //             if (response.ok) {
+    //                 localStorage.removeItem('token');
+    //                 setToken(null);
+    //                 setIsAuthenticated(false);
+    //                 console.log('Logged out successfully');
+    //             } else {
+    //                 console.error('Logout failed');
+    //                 console.log(response.status);
                     
-                    // clear token and reset state if unauthorized
-                    if (response.status === 401) {
-                        localStorage.removeItem('token');
-                        setToken(null);
-                        setIsAuthenticated(false);
-                        console.warn('Token was invalid. Token has been cleared from storage.');
-                    } else {console.log('Status is not 401.');
-                    }
-                }
-        } catch (error) {
-            console.error('An error occurred during logout:', error);
-            localStorage.removeItem('token');
-            setToken(null);
-            setIsAuthenticated(false);
-        }
-    };
-
-
-    useEffect(() => {
-        const verifyToken = async () => {
-            const storedToken = localStorage.getItem('token');
-            if (storedToken) {
-                try {
-                    const response = await fetch('/api/auth/verify-token/', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Token ${storedToken}`,
-                        },
-                    });
-
-                    console.log('Reponse status:', response.status);
-                      
-                    if (!response.ok) {
-                        console.warn('Invalid token detected, logging out...');
-                        localStorage.removeItem('token');
-                        setToken(null);
-                        setIsAuthenticated(false);
-                    }
-                } catch (error) {
-                    console.error('Error verifying token:', error);
-                    localStorage.removeItem('token');
-                    setToken(null);
-                    setIsAuthenticated(false);
-                }
-            }
-        };
-    
-        verifyToken();
-    }, []);
-
-
-    // const logout = () => {
+    //                 // clear token and reset state if unauthorized
+    //                 if (response.status === 401) {
+    //                     localStorage.removeItem('token');
+    //                     setToken(null);
+    //                     setIsAuthenticated(false);
+    //                     console.warn('Token was invalid. Token has been cleared from storage.');
+    //                 } else {console.log('Status is not 401.');
+    //                 }
+    //             }
+    //     } catch (error) {
+    //         console.error('An error occurred during logout:', error);
     //         localStorage.removeItem('token');
     //         setToken(null);
     //         setIsAuthenticated(false);
-    //         console.log('Logged out successfully');
-    // }
+    //     }
+    // };
+
+
+
+    const logout = () => {
+            localStorage.removeItem('token');
+            setToken(null);
+            setIsAuthenticated(false);
+            console.log('Logged out successfully');
+    }
 
 
     // // expose login and logout globally so that they can be called from outside React app

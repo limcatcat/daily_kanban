@@ -15,6 +15,7 @@ from rest_framework.authentication import get_authorization_header, TokenAuthent
 from django.urls import reverse
 from django.http import JsonResponse
 from .serializers import UserRegistrationSerializer
+from rest_framework.exceptions import AuthenticationFailed
 
 
 
@@ -198,10 +199,3 @@ class RegisterAPIView(APIView):
             return Response({'success': 'User registered successfully!'}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-
-class VerifyTokenAPIView(APIView):
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        return Response({'detail': 'Token is valid'}, status=200)

@@ -1,6 +1,4 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
-import { AuthContext } from "./AuthContext";
-
 
 const TaskContext = createContext();
 
@@ -21,7 +19,6 @@ export function TaskProvider({ children }) {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
 
-    const {setToken, setIsAuthenticated} = useContext(AuthContext);
 
     // put Django API endpoints here later (added below)
     const fetchTasks = async (date) => {
@@ -47,9 +44,6 @@ export function TaskProvider({ children }) {
                     console.log(response);
                     if (response.status === 401) {
                         console.log('status 401 - invalid token');
-                        setToken(null);
-                        setIsAuthenticated(false);
-                        localStorage.removeItem('token');
                     }
                     throw new Error('Failed to fetch tasks');
                 }
@@ -64,7 +58,6 @@ export function TaskProvider({ children }) {
         };
     }
         
-
 
 
     const handleMonthChange = (selectedDate) => {
