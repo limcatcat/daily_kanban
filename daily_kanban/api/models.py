@@ -23,7 +23,7 @@ class Task(models.Model):
 
     class Meta:
         constraints = [
-            UniqueConstraint(fields=['user', 'description', 'date_created'], name='Task_comp_primary_key')
+            UniqueConstraint(fields=['description', 'date_created'], name='Task_comp_primary_key')
         ]
 
     def __str__(self):
