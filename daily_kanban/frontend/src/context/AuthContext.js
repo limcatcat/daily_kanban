@@ -98,7 +98,9 @@ export const AuthProvider = ({children}) => {
                             'Authorization': `Token ${storedToken}`,
                         },
                     });
-    
+
+                    console.log('Reponse status:', response.status);
+                      
                     if (!response.ok) {
                         console.warn('Invalid token detected, logging out...');
                         localStorage.removeItem('token');
