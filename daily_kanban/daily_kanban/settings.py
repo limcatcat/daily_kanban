@@ -27,9 +27,10 @@ STATICFILES_DIR = [
 SECRET_KEY = 'django-insecure-3o79_=+*nh)5l+avu=)%wb_4c(p#@cjb3-obz81bp7o!9(z+c*'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
+    'daily-kanban.onrender.com',
     'daily-kanban-backend.onrender.com',
 ]
 
