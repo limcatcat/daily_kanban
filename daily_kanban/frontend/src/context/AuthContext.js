@@ -65,7 +65,7 @@ export const AuthProvider = ({children}) => {
                     setIsAuthenticated(false);
                     console.log('Logged out successfully');
                 } else {
-                    console.error('Logout failed:', await response.json());
+                    console.error('Logout failed');
                     console.log(response.status);
                     
                     // clear token and reset state if unauthorized

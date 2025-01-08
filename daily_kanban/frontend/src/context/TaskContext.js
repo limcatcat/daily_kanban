@@ -40,7 +40,13 @@ export function TaskProvider({ children }) {
                         'Authorization': `Bearer ${token}`,
                     },
                 });
-                if (!response.ok) throw new Error('Failed to fetch tasks');
+                if (!response.ok) {
+                    console.log(response);
+                    if (response.status === 401) {
+                        console.log('status 401');
+                    }
+                    throw new Error('Failed to fetch tasks');
+                }
                 const data = await response.json();
                 setTasks(data);
             } catch (error) {
