@@ -50,7 +50,6 @@ export const AuthProvider = ({children}) => {
     };
 
 
-
     // const logout = async () => {
     //     try {
     //             const response = await fetch('/api/auth/logout/', {
@@ -86,7 +85,6 @@ export const AuthProvider = ({children}) => {
     //         setIsAuthenticated(false);
     //     }
     // };
-
 
 
     const logout = () => {

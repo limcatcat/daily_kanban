@@ -15,7 +15,6 @@ from rest_framework.authentication import get_authorization_header, TokenAuthent
 from django.urls import reverse
 from django.http import JsonResponse
 from .serializers import UserRegistrationSerializer
-from rest_framework.exceptions import AuthenticationFailed
 
 
 
