@@ -11,7 +11,7 @@ from datetime import datetime, date
 from django.db.models import Q
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.authentication import get_authorization_header
+from rest_framework.authentication import get_authorization_header, TokenAuthentication
 from django.urls import reverse
 from django.http import JsonResponse
 from .serializers import UserRegistrationSerializer
@@ -187,7 +187,6 @@ def delete_task(request, task_id):
     
 
 
-
 class RegisterAPIView(APIView):
 
     permission_classes = [AllowAny]
@@ -198,3 +197,11 @@ class RegisterAPIView(APIView):
             user = serializer.save()
             return Response({'success': 'User registered successfully!'}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class VerifyTokenAPIView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        return Response({'detail': 'Token is valid'}, status=200)

@@ -82,6 +82,39 @@ export const AuthProvider = ({children}) => {
         }
     };
 
+
+    useEffect(() => {
+        const verifyToken = async () => {
+            const storedToken = localStorage.getItem('token');
+            if (storedToken) {
+                try {
+                    const response = await fetch('/api/auth/verify-token/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Token ${storedToken}`,
+                        },
+                    });
+    
+                    if (!response.ok) {
+                        console.warn('Invalid token detected, logging out...');
+                        localStorage.removeItem('token');
+                        setToken(null);
+                        setIsAuthenticated(false);
+                    }
+                } catch (error) {
+                    console.error('Error verifying token:', error);
+                    localStorage.removeItem('token');
+                    setToken(null);
+                    setIsAuthenticated(false);
+                }
+            }
+        };
+    
+        verifyToken();
+    }, []);
+    
+
     // const logout = () => {
     //         localStorage.removeItem('token');
     //         setToken(null);
