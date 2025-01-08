@@ -50,20 +50,6 @@ const Stats = () => {
     }, []);
 
 
-    const resultParser = (most_productive_day_this_week) => {
-
-        if (most_productive_day_this_week.count === 0) {
-            return 'No tasks have been completed this week yet.\nGo ahead and make today the most productive day this week!'
-        } else {
-            if (most_productive_day_this_week.count === 1) {
-                return `${most_productive_day_this_week.day} (${most_productive_day_this_week.date}), completing ${most_productive_day_this_week.count} task`
-            } else {
-                return `${most_productive_day_this_week.day} (${most_productive_day_this_week.date}), completing ${most_productive_day_this_week.count} tasks`
-            }
-        }
-    };
-
-
     return (
 
         <div className='grid-container'>

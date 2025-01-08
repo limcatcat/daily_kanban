@@ -132,7 +132,7 @@ function KanbanBoard() {
 
                 const csrftoken = document.querySelector('[name=csrf-token]').content;
                 
-                fetch(`/tasks/${active.id}/update-status/`, {
+                fetch(`api/tasks/${active.id}/update-status/`, {
                     method: 'PATCH',
                     headers: {
                         'Content-type': 'application/json',
@@ -170,7 +170,7 @@ function KanbanBoard() {
 
         const csrftoken = document.querySelector('[name=csrf-token]').content;
 
-        fetch(`/tasks/${taskId}/update-description/`, {
+        fetch(`api/tasks/${taskId}/update-description/`, {
             method: 'PATCH',
             headers: {
                 'Content-type': 'application/json',
@@ -201,7 +201,7 @@ function KanbanBoard() {
 
         const csrftoken = document.querySelector('[name=csrf-token').content;
 
-        fetch(`/tasks/${taskId}/delete/`, {
+        fetch(`api/tasks/${taskId}/delete/`, {
             method: 'PATCH',
             headers: {
                 'Content-type': 'application/json',
@@ -227,7 +227,7 @@ function KanbanBoard() {
         const csrftoken = document.querySelector('[name=csrf-token').content;
         const token = localStorage.getItem('token');
 
-        fetch('/tasks/', {
+        fetch('api/tasks/', {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',

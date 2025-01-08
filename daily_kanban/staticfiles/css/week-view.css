@@ -1,0 +1,91 @@
+.week-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+}
+
+.week-view {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+
+.day-container {
+    /* border: 1px solid #ccc;
+    border-radius: 5px; */
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+.day {
+    /* padding-left: 0.2rem;
+    padding-right: 0.2rem; */
+    margin-bottom: 1.5rem;
+    margin-top: 0;
+}
+
+
+.weekday {
+    text-align: center;
+}
+
+.is-today {
+    color: #21987a;
+    font-weight: bold;
+}
+
+
+.date {
+    cursor: pointer;
+}
+
+.date:hover {
+    background-color: rgb(245, 234, 220);
+    border-radius: 6px;
+}
+
+.date.selected:hover {
+    background-color: black;
+    border-radius: 0px;
+}
+
+.week-change {
+    cursor: pointer;
+    font-size: large;
+}
+
+.week-change:hover {
+    background-color: rgb(232, 229, 229);
+    border-radius: 6px;
+}
+
+.selected {
+    font-weight: bold;
+    /* background-color: rgb(255, 195, 54); */
+    background-color: black;
+    color: white;
+    padding-left: 0.3rem;
+    padding-right: 0.3rem;
+}
+
+
+.month {
+    justify-content: center;
+    font-size: large;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+
+.week-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center; /* Align elements vertically in the row */
+    gap: 10px;
+  }

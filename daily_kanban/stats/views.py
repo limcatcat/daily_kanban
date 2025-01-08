@@ -6,8 +6,8 @@ from rest_framework.authentication import get_authorization_header
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework import status
-from frontend.models import Task
-from frontend.serializers import TaskSerializer
+from api.models import Task
+from api.serializers import TaskSerializer
 from django.db.models import Count, Min
 from django.http import JsonResponse
 from django.views.generic import TemplateView
@@ -17,7 +17,7 @@ from math import ceil
 
 # Create your views here.
 class StatsView(TemplateView):
-    template_name = 'frontend/index.html'
+    template_name = 'index.html'
 
 
 # helper function

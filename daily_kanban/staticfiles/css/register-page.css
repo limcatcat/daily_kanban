@@ -1,0 +1,51 @@
+.register-container {
+    width: 100%;
+    max-width: 25rem;
+    height: 690px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.register-container h2 {
+    text-align: center;
+}
+
+.register-container form div {
+    margin-bottom: 1rem;
+}
+
+.register-container form input {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.3rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.register-container form button {
+    width: 100%;
+    padding: 0.5rem;
+    background-color: #21987a;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.register-container form button:hover {
+    background-color: #176a55;
+}
+
+.error {
+    color: rgb(204, 60, 60);
+    font-size: 1rem;
+}
+
+.success {
+    color: #21987a;
+    font-size: 1rem;
+}

@@ -1,0 +1,75 @@
+.task {
+    display: block;
+    /* background-color: black; */
+    color: black;
+    box-shadow: 2px 2px 11px rgba(0, 0, 0, 0.6);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    touch-action: none;
+    transition: transform 200ms ease;
+}
+
+.task:active {
+    cursor: grabbing;
+}
+
+
+.column h3 {
+    display: block;
+    /* justify-content: center; */
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.column ul {
+    list-style-type: none;
+    padding-left: 0;
+    /* border: 0.5px solid;
+    border-radius: 3px; */
+}
+
+.task.backlog {
+    background-color: #e3d2d1;
+}
+
+.task.today {
+    background-color: #e9b3b3;
+}
+
+.task.in-progress {
+    background-color: #aedae6;
+}
+
+.task.done {
+    background-color: #a6d4c5;
+
+}
+
+.task.dragging {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.context-menu {
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 5px;
+    border-radius: 6px;
+    width: 150px;
+}
+
+.context-menu ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.context-menu li {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.context-menu li:hover {
+    background-color: #f0f0f0;
+}

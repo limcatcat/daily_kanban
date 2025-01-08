@@ -32,7 +32,7 @@ export function TaskProvider({ children }) {
         if (!!token) {
             
             try {
-                const response = await fetch(`/tasks?date=${formattedDate}`, {
+                const response = await fetch(`/api/tasks?date=${formattedDate}`, { // absolute path with the leading '/'
                     method: 'GET',
                     headers: {
                         'Content-type': 'application/json',
