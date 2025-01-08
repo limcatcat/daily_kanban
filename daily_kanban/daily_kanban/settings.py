@@ -115,21 +115,21 @@ WSGI_APPLICATION = 'daily_kanban.wsgi.application'
 #     }
 # }
 
-DOTENV_FILE = './.env'
-env_config = Config(RepositoryEnv(DOTENV_FILE))
+# DOTENV_FILE = './.env'
+# env_config = Config(RepositoryEnv(DOTENV_FILE))
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env_config.get('DB_NAME'),
-        'USER': env_config.get('DB_USER'),
-        'PASSWORD': env_config.get('DB_PASSWORD'),
-        'HOST': env_config.get('DB_HOST'),
-        'PORT': env_config.get('DB_PORT'),
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     }
 }
 
-if not any([env_config.get('DB_NAME'), env_config.get('DB_USER'), env_config.get('DB_PASSWORD')]):
+if not any([os.getenv('DB_NAME'), os.getenv('DB_USER'), os.getenv('DB_PASSWORD')]):
     DATABASES['default'] = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
