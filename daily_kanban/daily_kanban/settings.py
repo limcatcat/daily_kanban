@@ -29,7 +29,9 @@ SECRET_KEY = 'django-insecure-3o79_=+*nh)5l+avu=)%wb_4c(p#@cjb3-obz81bp7o!9(z+c*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'daily-kanban-backend.onrender.com',
+]
 
 
 # Application definition
@@ -74,6 +76,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:8000',
     'http://127.0.0.1:8001',
+    'daily-kanban-backend.onrender.com',
     # 'http://dailykanban.com',
     # 'https://dailykanban.com',
 ]
