@@ -15,12 +15,12 @@ function App() {
     // const [selectedDate, setSelectedDate] = useState(new Date());
     // const [showBacklog, setShowBacklog] = useState(true);
 
-    useEffect(() => {
-        localStorage.removeItem('token');
-        setToken(null);
-        setIsAuthenticated(false);
-        console.log('User is logged out automatically on app start.');
-    }, []);
+    // useEffect(() => {
+    //     localStorage.removeItem('token');
+    //     setToken(null);
+    //     setIsAuthenticated(false);
+    //     console.log('User is logged out automatically on app start.');
+    // }, []);
 
     return(
 
