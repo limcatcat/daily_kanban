@@ -40,8 +40,11 @@ def count_weekday_occ(start_date, end_date, weekday):
     while current_date <= end_date:
         count += 1
         current_date += timedelta(days=7)
-    return count
 
+    if count == 0:
+        return 1
+    
+    return count
 
 
 class StatsAPIView(APIView):
