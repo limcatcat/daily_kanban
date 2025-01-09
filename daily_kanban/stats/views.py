@@ -27,6 +27,23 @@ def get_start_of_week():
     return start_of_week
 
 
+# helper function for counting weekday occurrence within a period
+def count_weekday_occ(start_date, end_date, weekday):
+    if start_date > end_date:
+        return 1 # to avoid dividing with 0
+    
+    current_date = start_date
+    while current_date.weekday() != weekday:
+        current_date += timedelta(days=1)
+
+    count = 0
+    while current_date <= end_date:
+        count += 1
+        current_date += timedelta(days=7)
+    return count
+
+
+
 class StatsAPIView(APIView):
 
     permission_classes = [IsAuthenticated]
@@ -119,10 +136,7 @@ class StatsAPIView(APIView):
         for i, weekday in enumerate(weekdays):
             total_completed = sum(task['completed_count'] for task in completed_by_weekday if task['weekday'] == i + 1)
 
-            if today.weekday()  >= i :
-                average = round(total_completed / (number_of_weeks + 1), 2)
-            else:
-                average = round(total_completed / number_of_weeks, 2)
+            average = round((total_completed / count_weekday_occ(earliest_date.date(), today, i)), 2)
 
             avg_completed_by_weekday.append({
                 'weekday': weekday,
@@ -187,5 +201,3 @@ class StatsAPIView(APIView):
         # }
 
         return JsonResponse(stats)
-
-
