@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import TaskListAPIView, update_task_status, update_task_description, delete_task, get_nav_urls, RegisterAPIView
+from .views import TaskListAPIView, update_task_status, update_task_description, delete_task, get_nav_urls, RegisterAPIView, get_username
 
 app_name = 'api'
 
@@ -13,4 +13,5 @@ urlpatterns = [
     path('tasks/<int:task_id>/delete/', delete_task, name='delete_task'),
     path('nav-urls/', get_nav_urls, name='nav_urls'),
     path('register/', RegisterAPIView.as_view(), name='register'),
+    path('auth/login/', get_username, name='get_username'),
 ]
