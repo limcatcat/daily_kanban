@@ -5,7 +5,7 @@ import { AuthContext } from '../context/AuthContext';
 const Navbar = () => {
 
     const [urls, setUrls] = useState({});
-    const {isAuthenticated, logout} = useContext(AuthContext);
+    const {isAuthenticated, logout, username} = useContext(AuthContext);
 
 
     useEffect(() => {
@@ -37,8 +37,10 @@ const Navbar = () => {
             </div>
 
             {isAuthenticated && 
-                (
-                    <a className='nav-link login' href='#' onClick={handleLogout}>Sign out</a>
+                (   <div className='auth-container'>
+                        <span className='username'>{username}</span>
+                        <a className='nav-link login' href='#' onClick={handleLogout}>Sign out</a>
+                    </div>
                 )
             }
 

@@ -6,6 +6,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({children}) => {
     const [token, setToken] = useState(localStorage.getItem('token') || null);
     const [isAuthenticated, setIsAuthenticated] = useState(!!token);
+    const [username, setUsername] = useState(localStorage.getItem('username') || '');
 
 
     const csrftoken = document.querySelector('[name=csrf-token]').content;
@@ -20,6 +21,37 @@ export const AuthProvider = ({children}) => {
     useEffect(() => {
         setIsAuthenticated(!!token);
     }, [token]);
+
+    useEffect(() => {
+        if (token) {
+            fetch('/api/auth/user/', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Failed to fetch user details');
+                }
+            })
+            .then(data => {
+                setUsername(data.username);
+            })
+            .catch(error => {
+                console.error('Failed to fetch usrname:', error);
+                setUsername('');
+                // localStorage.removeItem('token');
+                // setToken(null);
+                // setIsAuthenticated('false');
+            });
+        } else {
+            setUsername('');
+        }
+    }, [token]);
+
 
 
     const login = async (username, password) => {
@@ -36,8 +68,10 @@ export const AuthProvider = ({children}) => {
             if (response.ok) {
                 const data = await response.json();
                 localStorage.setItem('token', data.key);
+                localStorage.setItem('username', username);
                 setToken(data.key);
                 setIsAuthenticated(true);
+                setUsername(username);
                 console.log(`Signed in with: ${username}`);
 
                 // if (fetchTasks) {
@@ -58,49 +92,51 @@ export const AuthProvider = ({children}) => {
     };
 
 
-    // const logout = async () => {
-    //     try {
-    //             const response = await fetch('/api/auth/logout/', {
-    //                 method: 'POST',
-    //                 headers: {
-    //                     'Content-type': 'application/json',
-    //                     'Authorization': `Token ${token}`,
-    //                 },
-    //             });
+    const logout = async () => {
+        try {
+                const response = await fetch('/api/auth/logout/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json',
+                        'Authorization': `Token ${token}`,
+                    },
+                });
         
-    //             if (response.ok) {
-    //                 localStorage.removeItem('token');
-    //                 setToken(null);
-    //                 setIsAuthenticated(false);
-    //                 console.log('Logged out successfully');
-    //             } else {
-    //                 console.error('Logout failed');
-    //                 console.log(response.status);
+                if (response.ok) {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('username');
+                    setToken(null);
+                    setIsAuthenticated(false);
+                    setUsername('');
+                    console.log('Logged out successfully');
+                } else {
+                    console.error('Logout failed');
+                    console.log(response.status);
                     
-    //                 // clear token and reset state if unauthorized
-    //                 if (response.status === 401) {
-    //                     localStorage.removeItem('token');
-    //                     setToken(null);
-    //                     setIsAuthenticated(false);
-    //                     console.warn('Token was invalid. Token has been cleared from storage.');
-    //                 } else {console.log('Status is not 401.');
-    //                 }
-    //             }
-    //     } catch (error) {
-    //         console.error('An error occurred during logout:', error);
-    //         localStorage.removeItem('token');
-    //         setToken(null);
-    //         setIsAuthenticated(false);
-    //     }
-    // };
-
-
-    const logout = () => {
+                    // clear token and reset state if unauthorized
+                    if (response.status === 401) {
+                        localStorage.removeItem('token');
+                        setToken(null);
+                        setIsAuthenticated(false);
+                        console.warn('Token was invalid. Token has been cleared from storage.');
+                    } else {console.log('Status is not 401.');
+                    }
+                }
+        } catch (error) {
+            console.error('An error occurred during logout:', error);
             localStorage.removeItem('token');
             setToken(null);
             setIsAuthenticated(false);
-            console.log('Logged out successfully');
-    }
+        }
+    };
+
+
+    // const logout = () => {
+    //         localStorage.removeItem('token');
+    //         setToken(null);
+    //         setIsAuthenticated(false);
+    //         console.log('Logged out successfully');
+    // }
 
 
     // // expose login and logout globally so that they can be called from outside React app
@@ -111,7 +147,7 @@ export const AuthProvider = ({children}) => {
 
 
     return (
-        <AuthContext.Provider value={{token, setToken, isAuthenticated, setIsAuthenticated, login, logout}}>
+        <AuthContext.Provider value={{token, setToken, isAuthenticated, setIsAuthenticated, login, logout, username}}>
             {children}
         </AuthContext.Provider>
     );
