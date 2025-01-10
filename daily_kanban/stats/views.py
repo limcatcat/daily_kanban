@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from api.models import Task
 from api.serializers import TaskSerializer
-from django.db.models import Count, Min
+from django.db.models import Count, Min, Max
 from django.http import JsonResponse
 from django.views.generic import TemplateView
 from django.db.models.functions import TruncDate, ExtractIsoWeekDay
@@ -165,9 +165,11 @@ class StatsAPIView(APIView):
 
         # 3. the average number of completed tasks per day
         if earliest_date:
-            number_of_days = (today - earliest_date.date()).days
-            if number_of_days == 0:
-                number_of_days = 1
+            if earliest_date.date() > today:
+                latest_date = Task.objects.filter(user=user, archived=False, status='3').aggregate(Max('date_done'))['date_done__max']
+                number_of_days = latest_date.date() - earliest_date.date() + 1
+            else:
+                number_of_days = (today - earliest_date.date()).days + 1
         else:
             number_of_days = 1
 
