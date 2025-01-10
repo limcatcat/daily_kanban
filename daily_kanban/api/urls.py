@@ -13,5 +13,5 @@ urlpatterns = [
     path('tasks/<int:task_id>/delete/', delete_task, name='delete_task'),
     path('nav-urls/', get_nav_urls, name='nav_urls'),
     path('register/', RegisterAPIView.as_view(), name='register'),
-    path('auth/login/', get_username, name='get_username'),
+    path('auth/get-username/', get_username, name='get_username'),
 ]
