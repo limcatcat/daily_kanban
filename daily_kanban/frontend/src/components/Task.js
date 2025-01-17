@@ -12,6 +12,7 @@ function Task({id, description, status, handleDragStart, isDragging, onUpdateTas
     const [contextMenuPosition, setContextMenuPosition] = useState({x: 0, y: 0});
 
     const contextMenuRef = useRef(null);
+    const longPressTimerRef = useRef(null);
 
     const {attributes, listeners, setNodeRef, transform, transition} = useSortable({id});
 
@@ -39,6 +40,18 @@ function Task({id, description, status, handleDragStart, isDragging, onUpdateTas
         e.preventDefault();
         setContextMenuPosition({x: e.clientX, y: e.clientY});
         setShowContextMenu(true);
+    };
+
+    const handleTouchStart = e => {
+        longPressTimerRef.current = setTimeout(() => {
+            const rect = e.target.getBoundingClientRect();
+            setContextMenuPosition({x:rect.left, y:rect.bottom});
+            setShowContextMenu(true);
+        }, 500);
+    };
+
+    const handleTouchEnd = () => {
+        clearTimeout(longPressTimerRef.current);
     };
 
     const handleEdit = () => {
@@ -109,6 +122,8 @@ function Task({id, description, status, handleDragStart, isDragging, onUpdateTas
             {...listeners}
             onDragStart={e => !isEditing && handleDragStart(e, {id, description, status})}
             onContextMenu={handleContextMenu}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
             >
                 {isEditing ? (
                     <input 
