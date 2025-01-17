@@ -38,7 +38,7 @@ function KanbanColumn({title, status, activeId, onUpdateTask, onDeleteTask, isAd
             onMouseLeave={e => (e.currentTarget.style.backgroundColor = isOver ? '#efdff0' : 'white')}
             >
             <SortableContext items={tasksByStatus.map(task => task.id)} strategy={verticalListSortingStrategy}>
-                <h3>{title}</h3>
+                <h3 className='column-title'>{title}</h3>
 
                     {tasksByStatus.map(task => {
                         const isDragging = task.id === activeId;
