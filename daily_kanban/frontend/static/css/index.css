@@ -169,3 +169,250 @@
     align-content: center;
     font-size: 1rem;
 }
+
+
+@media (max-width: 550px) {
+
+    /* * {
+        outline: 1px solid grey;
+    } */
+
+    #app {
+        display: flex;
+        flex-direction: column;
+        width: 100vw;
+        height: 100vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+        align-self: center;
+        align-content: center;
+    }
+
+    .main-container {
+        align-self: center;
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        padding-bottom: 1rem;
+    }
+
+    .main-content {
+        padding-top: 0;
+    }
+    
+    .month {
+        margin-top: 0.7rem;
+        margin-bottom: 0.3rem;;
+    }
+
+    .week {
+        align-self: center;
+        max-width: 100%;
+        justify-self: center;
+    }
+
+    .week-row {
+        max-width: 100%;
+        gap: 0;
+        margin: 0;
+    }
+
+    .day {
+        padding-left: 0;
+        margin: 0;
+    }
+
+    .day-container {
+        margin: 0.5rem;
+    }
+  
+    .kanban {
+        display: flex !important;
+        flex-direction: column;
+        width: 100%;
+        justify-self: center;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+  
+    .column {
+        align-self: center;
+        display: flex;
+        background-color: grey;
+        border-radius: 4px;
+        flex-direction: column;
+        flex: 1;
+        min-width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        align-content: center;
+        background-color: rgb(249, 249, 249);
+        margin-top: 0 !important;
+        padding-top: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .backlog-column {
+        flex-direction: column;
+        padding: 0 !important;
+        padding: 1rem;
+    }
+    
+    .add-task-button {
+        font-size: 1rem; /* Adjust button size */
+        padding: 0.5rem;
+    }
+    
+    .show-backlog,
+    .show-calendar {
+        font-size: 1rem;
+        padding: 0;
+        margin: 0 !important;
+        text-align: center;
+    }
+
+    .react-calendar {
+        flex-direction: column;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        align-self: center;
+    }
+    
+    .task {
+        display: flex;
+        flex: 0 1 auto;
+        min-height: 1.5rem;
+        max-height: 1.5rem;
+        width: 90%;
+        max-width: 90%;
+        word-wrap: break-word;
+        align-self: center;
+        align-items: center;
+        border-radius: 5px;
+        margin-top: 0;
+    }
+    
+    .task.backlog {
+        display: flex;
+        flex: 0 1 auto;
+        min-height: 1.5rem;
+        max-height: 1.5rem;
+        width: 90%;
+        max-width: 90%;
+        word-wrap: break-word;
+        align-self: center;
+        align-items: center;
+        border-radius: 5px;
+    }
+    
+    .container-fluid {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        background-color: #333;
+        z-index: 1000;
+      }
+
+
+    /* Navbar.js */
+    .navbar-collapse {
+        display: flex !important;
+        height: 3.5rem;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    
+    .navbar {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+    }
+
+    .nav-link svg {
+        width: 1.5rem;
+        height: 1.5rem;
+        margin-right: 0.5rem;
+        fill: white;
+    }
+
+    .navbar-toggler {
+        display: none;
+    }
+
+    .nav-link {
+        font-size: 1.5rem;
+        color: white;
+        text-align: center;
+        display: flex;
+        align-items: center;
+    }
+
+    .nav-link svg {
+        width: 1.5rem;
+        height: 1.5rem;
+        margin-right: 0.5rem;
+    }
+
+    .nav-link.logout {
+        position: absolute;
+        right: 3%;
+        fill: rgb(180, 180, 180);
+    }
+
+    .navbar-nav {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    .nav-link.home,
+    .auth-container {
+        display: none;
+    }
+
+
+    body {
+        margin: 0;
+        padding-top: 3rem;
+    }
+
+
+    .kanban::-webkit-scrollbar {
+        display: none; /* Hide scrollbars for cleaner UI */
+    }
+
+
+    /* Stats.js */
+    .grid-container {
+        grid-template-columns: 1fr; /* Stack columns on top of each other */
+    }
+
+    .stats-box-container {
+        width: 100%;
+        margin-top: 0.5rem;
+        padding-left: 3rem;
+        padding-right: 3rem;
+    }
+
+    .stats-box-title {
+        font-size: 1rem; /* Smaller title font size for mobile */
+    }
+
+    .stats-box-value {
+        font-size: 1.5rem; /* Smaller value font size for mobile */
+    }
+
+
+    /* LoginPage.js */
+    .login-container {
+        max-width: 72%;
+        align-self: center;
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+
+  }

@@ -1,0 +1,273 @@
+.main-container {
+    display: grid;
+    /* grid-template-columns: 300px 1fr; */
+    grid-template-rows: 20% 80%;
+    height: 100vh;
+    /* align-items: center; */
+    justify-content: center;
+}
+
+.calendar {
+    background-color: #ffffff;
+    padding: 1.5em;
+    /* border-right: 0.5px solid; */
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    /* justify-content: center; */
+}
+
+.backlog-column {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.show-backlog,
+.show-calendar {
+    display: flex;
+    justify-content: center;
+    margin: 2rem;
+    font-weight: bold;
+    color: black;
+}
+
+.main-content {
+    display: grid;
+    /* grid-template-rows: 10% 90%; */
+    gap: 0.5rem;
+    padding: 0.5rem;
+    /* border: 2px solid; */
+    font-family: inherit;
+}
+
+.week {
+    padding-top: 1rem;
+    padding-bottom: 0.5rem;
+    /* border: 0.5px solid;
+    border-radius: 5px; */
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.kanban {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(9rem, 1fr));
+    gap: 1rem;
+    /* display: flex; */
+    justify-content: center;
+    align-items: start;  
+}
+
+.column {
+    padding: 1rem;
+    /* border: 0.5px solid;
+    border-radius: 5px; */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.column:hover {
+    background-color: aliceblue;
+    transition: background-color 0.3s ease;
+}
+
+.new-task input {
+    width: 100%;
+    padding: 8px;
+    margin: 4px 0;
+    font-size: 14px;
+}
+.add-task-button {
+    background-color: #ffffff;
+    color: rgb(204, 204, 204);
+    border-radius: 9px;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+.add-task-button:hover {
+    /* background-color: #e3d2d1; */
+    background-color: #ffffff;
+    color: #000000;
+}
+
+
+
+/* navbar styling */
+
+.container-fluid {
+    position: relative;
+  }
+
+.navbar-nav {
+    height: 4.5rem;
+    padding: 1rem;
+    font-size: 1.2rem;
+}
+
+.nav-link {
+    color: white;
+    cursor: pointer;
+}
+
+.nav-link.home {
+    position: absolute;
+    left: 1.5%;
+    white-space: nowrap;
+    font-family: 'Grand Hotel', var(--bs-body-font-family);
+    font-size: xx-large;
+    align-self: center;
+}
+
+.nav-link.board {
+    position: absolute;
+    left: 40%;
+  }
+
+.nav-link.stats {
+    position: absolute;
+    left: 60%;
+}
+
+
+.auth-container {
+    display: flex;
+    justify-content: flex-end;
+    align-self: center;
+    align-items: center;
+    align-content: center;
+    position: absolute;
+    right: 2%;
+    gap: 1rem;
+}
+
+.nav-link.login {
+    border: 0.1px solid rgb(111, 111, 111);
+    align-self: center;
+    align-content: center;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    border-radius: 6px;
+    white-space: nowrap;
+    /* position: absolute;
+    right: 2%; */
+}
+
+.nav-link.login:hover {
+    color: white;
+    background-color: rgb(42, 42, 42);
+    border-color: rgb(42, 42, 42);
+}
+
+.username {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: rgb(159, 159, 159);
+    align-content: center;
+    font-size: 1rem;
+}
+
+
+@media (max-width: 480px) {
+
+    body {
+        background-color: grey !important;
+    }
+
+    .main-container {
+      display: flex;
+      flex-direction: column;
+      padding: 1rem;
+      height: auto; /* Allow the container to grow with content */
+    }
+  
+    .kanban {
+      grid-template-columns: 1fr; /* Stack all columns vertically */
+      gap: 1rem;
+    }
+  
+    .backlog-column {
+      order: 1; /* Ensure it appears at the top of the Kanban layout */
+    }
+  
+    .show-calendar {
+      order: -1; /* Move "Show Calendar" to the top */
+      margin-bottom: 1rem;
+    }
+  
+    .column {
+      padding: 1rem;
+      flex-direction: column; /* Stack column items */
+      justify-content: flex-start;
+    }
+
+    .container-fluid {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background-color: #333;
+        z-index: 1000; /* Ensure it stays above other content */
+      }
+    
+      .navbar-nav {
+        display: flex;
+        justify-content: space-around; /* Space out icons evenly */
+        padding: 0.5rem;
+      }
+    
+      .nav-link {
+        font-size: 1.2rem; /* Adjust icon size for easy tapping */
+        color: white;
+      }
+    
+      .nav-link.home {
+        display: none; /* Hide text-based links */
+      }
+    
+      .nav-link.board::before {
+        content: "📋"; /* Replace with appropriate icons */
+      }
+    
+      .nav-link.stats::before {
+        content: "📊";
+      }
+
+      .kanban {
+        overflow-x: auto; /* Allow horizontal scrolling if needed */
+        padding: 1rem;
+      }
+    
+      .kanban::-webkit-scrollbar {
+        display: none; /* Hide scrollbars for cleaner UI */
+      }
+    
+      .column {
+        min-width: 100%; /* Ensure columns stretch the full width */
+      }
+    
+      .add-task-button {
+        font-size: 1rem; /* Adjust button size */
+        padding: 0.5rem;
+      }
+
+      .calendar {
+        flex-direction: column;
+        padding: 1rem;
+        margin-bottom: 1rem;
+      }
+    
+      .backlog-column {
+        flex-direction: column;
+        padding: 1rem;
+      }
+    
+      .show-backlog,
+      .show-calendar {
+        font-size: 1rem;
+        padding: 0.5rem;
+        text-align: center;
+      }
+  }
