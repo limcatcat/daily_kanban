@@ -24,7 +24,7 @@ export const AuthProvider = ({children}) => {
 
     useEffect(() => {
         if (token) {
-            fetch('/api/auth/user/', {
+            fetch('/api/auth/get-username/', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -41,7 +41,7 @@ export const AuthProvider = ({children}) => {
                 setUsername(data.username);
             })
             .catch(error => {
-                console.error('Failed to fetch usrname:', error);
+                console.error('Failed to fetch username:', error);
                 setUsername('');
                 // localStorage.removeItem('token');
                 // setToken(null);
@@ -129,7 +129,6 @@ export const AuthProvider = ({children}) => {
             setIsAuthenticated(false);
         }
     };
-
 
     // const logout = () => {
     //         localStorage.removeItem('token');
