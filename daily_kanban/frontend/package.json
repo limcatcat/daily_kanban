@@ -31,5 +31,6 @@
     "date-fns": "^4.1.0",
     "react-calendar": "^5.1.0",
     "react-router-dom": "^6.28.0"
-  }
+  },
+  "proxy": "http://localhost:8000"
 }

@@ -187,7 +187,8 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = '/static/'
+# STATIC_URL = '/static/'
+STATIC_URL = os.path.join(BASE_DIR, 'frontend/static/frontend/')
 
 STATICFILES_DIRS = [
     BASE_DIR / "static", # project-level static files
