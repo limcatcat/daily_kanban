@@ -262,7 +262,7 @@
     }
     
     .add-task-button {
-        font-size: 1rem; /* Adjust button size */
+        font-size: 1rem;
         padding: 0.5rem;
     }
     
@@ -386,13 +386,13 @@
 
 
     .kanban::-webkit-scrollbar {
-        display: none; /* Hide scrollbars for cleaner UI */
+        display: none; /* hide scrollbars for cleaner UI */
     }
 
 
     /* Stats.js */
     .grid-container {
-        grid-template-columns: 1fr; /* Stack columns on top of each other */
+        grid-template-columns: 1fr; /* stack columns on top of each other */
     }
 
     .stats-box-container {
@@ -403,11 +403,11 @@
     }
 
     .stats-box-title {
-        font-size: 1rem; /* Smaller title font size for mobile */
+        font-size: 1rem;
     }
 
     .stats-box-value {
-        font-size: 1.5rem; /* Smaller value font size for mobile */
+        font-size: 1.5rem;
     }
 
 
