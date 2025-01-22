@@ -22,7 +22,7 @@ const Navbar = () => {
         const mediaQuery = window.matchMedia('(max-width: 550px)');
         const handleMediaChange = (e) => setIsSmartphone(e.matches);
     
-        // Set initial state and add listener
+        // set initial state and add listener
         setIsSmartphone(mediaQuery.matches);
         mediaQuery.addEventListener('change', handleMediaChange);
     
