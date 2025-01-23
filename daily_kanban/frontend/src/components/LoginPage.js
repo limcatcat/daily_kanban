@@ -26,6 +26,11 @@ const LoginPage = () => {
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     placeholder="Username"
+                    onKeyDown={e => {
+                        if (e.key === 'Enter') {
+                            handleLogin();
+                        }
+                    }}
                 />
                 <input
                     type="password"
