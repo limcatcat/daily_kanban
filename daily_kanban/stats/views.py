@@ -167,7 +167,7 @@ class StatsAPIView(APIView):
         if earliest_date:
             if earliest_date.date() > today:
                 latest_date = Task.objects.filter(user=user, archived=False, status='3').aggregate(Max('date_done'))['date_done__max']
-                number_of_days = latest_date.date() - earliest_date.date() + 1
+                number_of_days = (latest_date.date() - earliest_date.date()).days + 1
             else:
                 number_of_days = (today - earliest_date.date()).days + 1
         else:

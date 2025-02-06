@@ -1,11 +1,14 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCalendarCheck, faChartBar, faChartSimple, faMagnifyingGlass, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 
 
 const Navbar = () => {
 
     const [urls, setUrls] = useState({});
     const {isAuthenticated, logout, username} = useContext(AuthContext);
+    const [isSmartphone, setIsSmartphone] = useState(false);
 
 
     useEffect(() => {
@@ -13,6 +16,20 @@ const Navbar = () => {
             .then(response => response.json())
             .then(data => setUrls(data));
     }, []);
+
+
+    useEffect(() => {
+        const mediaQuery = window.matchMedia('(max-width: 550px)');
+        const handleMediaChange = (e) => setIsSmartphone(e.matches);
+    
+        // set initial state and add listener
+        setIsSmartphone(mediaQuery.matches);
+        mediaQuery.addEventListener('change', handleMediaChange);
+    
+        return () => {
+          mediaQuery.removeEventListener('change', handleMediaChange);
+        };
+      }, []);
 
 
     const handleLogout = event => {
@@ -32,8 +49,31 @@ const Navbar = () => {
             <div className="navbar-nav">
                 <a className="nav-link home" href={urls.home}>Daily Kanban</a>
             <div className='menu-container'>
-                <a className="nav-link board" href={urls.home}>Board</a>
-                <a className="nav-link stats" href={urls.stats}>Statistics</a>
+                <a className="nav-link board" href={urls.home}>
+                    {isSmartphone ? (
+                        <FontAwesomeIcon icon={faCalendarCheck} />
+                    ): 
+                        <span>
+                            Board
+                        </span>
+                    }
+                </a>
+                <a className="nav-link stats" href={urls.stats}>
+                    {isSmartphone ? (
+                        <FontAwesomeIcon icon={faChartSimple} />
+                    ):
+                        <span>
+                            Statistics
+                        </span>
+                    }
+                </a>
+                
+                <a className="nav-link logout" onClick={handleLogout}>
+                    {isSmartphone && isAuthenticated ? (
+                        <FontAwesomeIcon icon={faRightFromBracket} />
+                    ): ''}
+                </a>
+
             </div>
 
             {isAuthenticated && 

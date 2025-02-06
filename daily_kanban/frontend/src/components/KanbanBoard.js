@@ -62,7 +62,7 @@ function KanbanBoard() {
     //     done: tasks.filter(task => task.status == 'Done')
     // };
 
-    const formattedSelectedDate = format(selectedDate, "yyyy-MM-dd'T'hh:mm:ss");
+    const formattedSelectedDate = format(selectedDate, "yyyy-MM-dd'T'HH:mm:ss");
 
 
     const handleDateChange = (date) => {
@@ -138,7 +138,7 @@ function KanbanBoard() {
                         'Content-type': 'application/json',
                         'X-CSRFToken': csrftoken,
                     },
-                    body: JSON.stringify({status: overColumn, date: new Date().toLocaleDateString('en-CA') == formattedSelectedDate.split('T')[0] ? format(new Date(), "yyyy-MM-dd'T'hh:mm:ss") : formattedSelectedDate}),
+                    body: JSON.stringify({status: overColumn, date: new Date().toLocaleDateString('en-CA') == formattedSelectedDate.split('T')[0] ? format(new Date(), "yyyy-MM-dd'T'HH:mm:ss") : formattedSelectedDate}),
                 })
                     .then(response => {
                         if (!response.ok) {
@@ -234,7 +234,7 @@ function KanbanBoard() {
                 'X-CSRFToken': csrftoken,
                 'Authorization': `Bearer ${token}`,
             },
-            body: JSON.stringify({ description, status: '0', date_created: format(new Date(), "yyyy-MM-dd'T'hh:mm:ss")}),
+            body: JSON.stringify({ description, status: '0', date_created: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss")}),
         })
         .then(response => {
             if (response.ok) {
