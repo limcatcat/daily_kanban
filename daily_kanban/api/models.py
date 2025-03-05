@@ -20,6 +20,9 @@ class Task(models.Model):
     date_done = models.DateTimeField(null=True, blank=True)
     archived = models.BooleanField(default=False)
 
+    # deadline = models.DateField(null=True, blank=True)
+    # col_order = models.PositiveIntegerField(default= 0, null=True, blank=True)
+
 
     class Meta:
         constraints = [
