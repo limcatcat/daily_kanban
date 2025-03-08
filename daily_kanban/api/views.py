@@ -150,8 +150,13 @@ def update_task_status(request, task_id):
 
         task.save()
 
+        completed_tasks_count = Task.objects.filter(user=request.user, status='3', archived=False).count()
+
         print(f"Task ID: {task_id}, New status: {request.data.get('status')}")
-        return Response({'message': 'Task status updated successfully'}, status=200)
+        return Response({
+            'message': 'Task status updated successfully',
+            'completed_tasks_count': completed_tasks_count            
+            }, status=200)
     except Task.DoesNotExist:
         return Response({'error': 'Task not found'}, status=404)
     

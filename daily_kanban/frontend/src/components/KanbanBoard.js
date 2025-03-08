@@ -45,7 +45,7 @@ import { format } from 'date-fns';
 // ]
 
 
-function KanbanBoard() {
+function KanbanBoard({onTaskComplete}) {
 
     // const [tasks, setTasks] = useState(testTasks);
     // const { tasks, setTasks, selectedDate, setSelectedDate } = useTaskContext();
@@ -144,12 +144,24 @@ function KanbanBoard() {
                         if (!response.ok) {
                             console.error('Failed to update task status');
                         }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // const data = response.json(); // this is incorrect
+
+                        if (!data) {
+                            console.error('Failed to parse response JSON');
+                        } else {
+                            onTaskComplete(data.completed_tasks_count);
+                            console.log(`completed_tasks_count: ${data.completed_tasks_count}`);
+                        }
                         
                     })
                     .catch(error => console.error('Error:', error));
                 
                     
-                console.log('updated tasks:', updatedTasks);
+                console.log('Task status successfully updated');
+                
                     
                 return updatedTasks;
             }    

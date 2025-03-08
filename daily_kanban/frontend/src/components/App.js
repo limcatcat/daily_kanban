@@ -7,11 +7,14 @@ import LoginPage from './LoginPage.js';
 import Stats from './Stats.js';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import RegisterPage from './RegisterPage.js';
+import CongratsModal from './CongratsModal.js';
 
 
 function App() {
 
     const {token, setToken, isAuthenticated, setIsAuthenticated} = useContext(AuthContext);
+    const [completedTasksCount, setCompletedTasksCount] = useState(0);
+    const [showModal, setShowModal] = useState(false);
     // const [selectedDate, setSelectedDate] = useState(new Date());
     // const [showBacklog, setShowBacklog] = useState(true);
 
@@ -21,6 +24,16 @@ function App() {
     //     setIsAuthenticated(false);
     //     console.log('User is logged out automatically on app start.');
     // }, []);
+
+    const handleTaskCompletion = (count) => {
+        setCompletedTasksCount(count);
+        if (count % 10 === 0) {
+            setShowModal(true);
+            console.log(`completed_tasks_count:${count}`);
+            
+        }
+    };
+
 
     return(
 
@@ -43,7 +56,8 @@ function App() {
                                     </div>
                                             
                                     <div className='main-content'>
-                                        <KanbanBoard />
+                                        <KanbanBoard onTaskComplete={handleTaskCompletion} />
+                                        {showModal && <CongratsModal show={showModal} count={completedTasksCount} onHide={() => setShowModal(false)} />}
                                     </div>
                                 </>    
                             } />
