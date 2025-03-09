@@ -27,7 +27,7 @@ function App() {
 
     const handleTaskCompletion = (count) => {
         setCompletedTasksCount(count);
-        if (count % 10 === 0) {
+        if (count !== null && count % 10 === 0) {
             setShowModal(true);
             console.log(`completed_tasks_count:${count}`);
             
