@@ -31,6 +31,10 @@ def get_nav_urls(request):
 # class HomeView(TemplateView):
 #     template_name = "frontend/index.html"
 
+def count_completed_tasks(request) -> int:
+    completed_tasks_count = Task.objects.filter(user=request.user, status='3', archived=False).count()
+    return completed_tasks_count + 1
+
 
 class TaskListAPIView(APIView):
 
@@ -95,6 +99,7 @@ class TaskListAPIView(APIView):
 def update_task_status(request, task_id):
 
     today = datetime.today().date()
+    completed_tasks_count = None
 
     try:
         task = Task.objects.get(id=task_id)
@@ -119,6 +124,7 @@ def update_task_status(request, task_id):
 
         # scenario 1-2: Task is moved from Backlog to Done
         if task.status == '0' and new_status == '3':
+            completed_tasks_count = count_completed_tasks(request)
             if selected_date == today:
                 task.date_assigned = timezone.now()
                 task.date_done = timezone.now()
@@ -134,6 +140,7 @@ def update_task_status(request, task_id):
 
         # scenario 3: Task is moved to Done or out of Done
         if task.status in ['1', '2'] and new_status == '3': # moved to Done
+            completed_tasks_count = count_completed_tasks(request)
             if selected_date == today:
                 task.date_done = timezone.now()
             else:
@@ -149,8 +156,6 @@ def update_task_status(request, task_id):
         task.status = new_status
 
         task.save()
-
-        completed_tasks_count = Task.objects.filter(user=request.user, status='3', archived=False).count()
 
         print(f"Task ID: {task_id}, New status: {request.data.get('status')}")
         return Response({
