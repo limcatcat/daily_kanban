@@ -29,8 +29,7 @@ function App() {
         setCompletedTasksCount(count);
         if (count !== null && count % 10 === 0) {
             setShowModal(true);
-            console.log(`completed_tasks_count:${count}`);
-            
+            console.log(`completed_tasks_count:${count}`);  
         }
     };
 

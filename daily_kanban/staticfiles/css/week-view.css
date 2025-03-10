@@ -89,3 +89,14 @@
     align-items: center; /* Align elements vertically in the row */
     gap: 10px;
   }
+
+
+.weekday.selected {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+
+.date.selected {
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
