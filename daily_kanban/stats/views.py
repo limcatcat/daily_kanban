@@ -13,7 +13,8 @@ from django.http import JsonResponse
 from django.views.generic import TemplateView
 from django.db.models.functions import TruncDate, ExtractIsoWeekDay
 from django.utils import timezone
-from math import ceil
+from collections import defaultdict
+
 
 # Create your views here.
 class StatsView(TemplateView):
@@ -206,3 +207,49 @@ class StatsAPIView(APIView):
         # }
 
         return JsonResponse(stats)
+    
+
+class StatsWeeklyCompletedAPIView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        auth_header = get_authorization_header(request).decode('utf-8')
+
+        if auth_header and auth_header.startswith('Bearer '):
+            token_key = auth_header.split(' ')[1]
+
+            try:
+                token = Token.objects.get(key=token_key)
+                user = token.user
+            except Token.DoesNotExist:
+                return Response({'error': 'Invalid token'}, status=status.HTTP_401_UNAUTHORIZED)
+            
+        else:
+            return Response({'error': 'Authorization header missing or malformed'}, status=status.HTTP_409_CONFLICT)
+        
+
+        today = datetime.today()
+        monday = today - timedelta(days=today.weekday())
+
+        weekly_completed_tasks = Task.objects.filter(
+            user=user,
+            archived=False,
+            status='3',
+            date_done__gte=monday.date(),
+            date_done__lte=(today + timedelta(days=1)).date()
+        )
+
+        
+        weekly_completed = defaultdict(list)
+
+        for task in weekly_completed_tasks:
+            weekday = task.date_done.strftime('%A').lower()
+            weekly_completed[weekday].append(task.description)
+
+        weekly_completed = dict(weekly_completed)
+
+        for weekday, tasks in weekly_completed.items():
+            print(f"{weekday}: {tasks}")
+
+        return JsonResponse(weekly_completed)

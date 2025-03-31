@@ -50,8 +50,11 @@
 }
 
 .date.selected:hover {
-    background-color: black;
-    border-radius: 0px;
+    background-color: rgb(119, 119, 119);
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
 }
 
 .week-change {
