@@ -91,7 +91,7 @@ const Stats = () => {
                 <StatsBox
                     title='Total Completed Tasks'
                     value={stats.total_completed}
-                    description={`That's ${stats.completed_percentage}% of your tasks!`}
+                    description={`You've completed ${stats.completed_percentage}% of today's tasks!`}
                     icon="✅"
                 />
 

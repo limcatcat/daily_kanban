@@ -14,6 +14,7 @@ from django.views.generic import TemplateView
 from django.db.models.functions import TruncDate, ExtractIsoWeekDay
 from django.utils import timezone
 from collections import defaultdict
+from datetime import date
 
 
 # Create your views here.
@@ -180,10 +181,11 @@ class StatsAPIView(APIView):
 
 
         # 4. the percentage of unfinished tasks
-        total_tasks_count = Task.objects.filter(user=user, archived=False).count()
+        open_tasks_count = Task.objects.filter(user=user, status__in=['1', '2'], archived=False).count()
+        done_today_count = Task.objects.filter(user=user, status='3', date_done__date=date.today(), archived=False).count()
         
-        if total_tasks_count > 0:
-            completed_percentage = round((total_completed_tasks_count / total_tasks_count) * 100, 2)
+        if open_tasks_count > 0:
+            completed_percentage = round((done_today_count / (open_tasks_count + done_today_count)) * 100, 2)
         else:
             completed_percentage = 0
 
