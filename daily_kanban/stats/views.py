@@ -251,12 +251,17 @@ class StatsWeeklyCompletedAPIView(APIView):
             weekday = task.date_done.strftime('%A').lower()
             weekly_completed[weekday].append(task.description)
 
-        weekly_completed = dict(weekly_completed)
+        # weekly_completed = dict(weekly_completed)
+
+        # for day in weekdays:
+        #     day = day.lower()
+        #     if day not in weekly_completed:
+        #         weekly_completed[day] = []
 
         for day in weekdays:
             day = day.lower()
             if day not in weekly_completed:
-                weekly_completed[day] = []
+                weekly_completed[day]
 
         for weekday, tasks in weekly_completed.items():
             print(f"{weekday}: {tasks}")
