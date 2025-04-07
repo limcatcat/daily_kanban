@@ -49,6 +49,9 @@ def count_weekday_occ(start_date, end_date, weekday):
     return count
 
 
+weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+
+
 class StatsAPIView(APIView):
 
     permission_classes = [IsAuthenticated]
@@ -131,8 +134,6 @@ class StatsAPIView(APIView):
         # print(f'number of weeks: {number_of_weeks}')
         # print(f'weekday of today: {today.weekday()}')
 
-        weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-
         completed_by_weekday = Task.objects.filter(user=user, archived=False, status='3').annotate(weekday=ExtractIsoWeekDay('date_done')
         ).values('weekday').annotate(completed_count=Count('id')).order_by('weekday')
 
@@ -182,7 +183,9 @@ class StatsAPIView(APIView):
 
         # 4. the percentage of unfinished tasks
         open_tasks_count = Task.objects.filter(user=user, status__in=['1', '2'], archived=False).count()
-        done_today_count = Task.objects.filter(user=user, status='3', date_done__date=date.today(), archived=False).count()
+        done_today_count = Task.objects.filter(user=user, status='3', date_done__date=timezone.now().date(), archived=False).count()
+
+        print(f'today: {timezone.now().date()}, done_today_count: {done_today_count}')
         
         if open_tasks_count > 0:
             completed_percentage = round((done_today_count / (open_tasks_count + done_today_count)) * 100, 2)
@@ -241,7 +244,6 @@ class StatsWeeklyCompletedAPIView(APIView):
             date_done__gte=monday.date(),
             date_done__lte=(today + timedelta(days=1)).date()
         )
-
         
         weekly_completed = defaultdict(list)
 
@@ -250,6 +252,11 @@ class StatsWeeklyCompletedAPIView(APIView):
             weekly_completed[weekday].append(task.description)
 
         weekly_completed = dict(weekly_completed)
+
+        for day in weekdays:
+            day = day.lower()
+            if day not in weekly_completed:
+                weekly_completed[day] = []
 
         for weekday, tasks in weekly_completed.items():
             print(f"{weekday}: {tasks}")

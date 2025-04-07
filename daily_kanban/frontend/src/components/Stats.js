@@ -85,7 +85,7 @@ const Stats = () => {
 
 
     return (
-        <>
+        <div className='stats-page'>
             <div className='grid-container'>
 
                 <StatsBox
@@ -122,7 +122,7 @@ const Stats = () => {
                 <StatsWeeklyContainer weeklyCompleted={weeklyCompleted}/>
             </div>
         
-        </>
+        </div>
 
 
     );
