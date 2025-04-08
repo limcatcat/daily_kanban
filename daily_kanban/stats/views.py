@@ -181,13 +181,13 @@ class StatsAPIView(APIView):
         print(f'number of days: {number_of_days}, avg per day: {avg_per_day}')
 
 
-        # 4. the percentage of unfinished tasks
+        # 4. the percentage of completed tasks
         open_tasks_count = Task.objects.filter(user=user, status__in=['1', '2'], archived=False).count()
         done_today_count = Task.objects.filter(user=user, status='3', date_done__date=timezone.now().date(), archived=False).count()
 
         print(f'today: {timezone.now().date()}, done_today_count: {done_today_count}')
         
-        if open_tasks_count > 0:
+        if (open_tasks_count + done_today_count) > 0:
             completed_percentage = round((done_today_count / (open_tasks_count + done_today_count)) * 100, 2)
         else:
             completed_percentage = 0
