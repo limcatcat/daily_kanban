@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import StatsView, StatsAPIView
+from .views import StatsView, StatsAPIView, StatsWeeklyCompletedAPIView
 from django.http import JsonResponse
 
 app_name = 'stats'
@@ -12,4 +12,5 @@ urlpatterns = [
     path('', StatsView.as_view(), name='stats'),
     # path('api/task-stats/', StatsAPIView.as_view(), name='task_stats'),
     path('api/task-stats/', StatsAPIView.as_view(), name='task_stats'),
+    path('api/weekly-completed/', StatsWeeklyCompletedAPIView.as_view(), name='weekly_completed')
 ]
