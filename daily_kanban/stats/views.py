@@ -234,24 +234,35 @@ class StatsWeeklyCompletedAPIView(APIView):
             return Response({'error': 'Authorization header missing or malformed'}, status=status.HTTP_409_CONFLICT)
         
 
-        today = datetime.today()
-        monday = today - timedelta(days=today.weekday())
+        # today = datetime.today()
+        selected_date = request.query_params.get('date')
+
+        if not selected_date:
+            selected_date = date.today()
+        else:
+            try:
+                selected_date = datetime.strptime(selected_date, '%Y-%m-%d').date()
+
+            except ValueError:
+                return Response({'error': 'Invalid date format'}, status=status.HTTP_400_BAD_REQUEST)
+
+        monday = selected_date - timedelta(days=selected_date.weekday())
+        print(f'monday: {monday}')
 
         weekly_completed_tasks = Task.objects.filter(
             user=user,
             archived=False,
             status='3',
-            date_done__gte=monday.date(),
-            date_done__lte=(today + timedelta(days=1)).date()
+            date_done__gte=monday,
+            # date_done__lte=(selected_date + timedelta(days=1)).date()
+            date_done__lte=(selected_date + timedelta(days=7))
         )
-        
+
         weekly_completed = defaultdict(list)
 
         for task in weekly_completed_tasks:
             weekday = task.date_done.strftime('%A').lower()
             weekly_completed[weekday].append(task.description)
-
-        # weekly_completed = dict(weekly_completed)
 
         # for day in weekdays:
         #     day = day.lower()
@@ -265,5 +276,10 @@ class StatsWeeklyCompletedAPIView(APIView):
 
         for weekday, tasks in weekly_completed.items():
             print(f"{weekday}: {tasks}")
+
+        weekly_completed = dict(weekly_completed)
+
+        weekly_completed['weekStart'] = str(monday)
+        weekly_completed['weekEnd'] = str(monday + timedelta(days=6))
 
         return JsonResponse(weekly_completed)

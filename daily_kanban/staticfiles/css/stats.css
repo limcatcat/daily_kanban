@@ -48,10 +48,10 @@
 .stats-page {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    padding-bottom: 90rem;
   }
 
-.stats-weekly-container {
+.weekly-completed-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -59,9 +59,34 @@
     border: 1px solid #ddd;
     border-radius: 10px;
     padding: 20px;
-    margin: 10px;
+    margin: 0 auto 3rem auto;
     background-color: #f9f9f9;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     text-align: center;
-    width: 30rem;
+    width: fit-content;
+}
+
+.stats-weekly-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.stats-weekday {
+    flex: 1 1 120px;               /* Responsive sizing with min width */
+    margin: 0.3rem;                  /* Space between weekdays */
+    padding: 15px;                 /* Inner spacing */
+    border: 1px solid #ccc;        /* Light border */
+    border-radius: 8px;            /* Rounded corners */
+    background-color: #ffffff;     /* White background */
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);  /* Soft shadow */
+    font-size: small;
+    text-align: center;
+    transition: transform 0.2s ease;
+    width: 10rem;
+    margin-top: 1rem;
+}
+
+.completed-weekday {
+    padding-bottom: 1rem;
 }

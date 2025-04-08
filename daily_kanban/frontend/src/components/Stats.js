@@ -21,6 +21,8 @@ const Stats = () => {
     });
 
     const [weeklyCompleted, setWeeklyCompleted] = useState({
+        weekStart: '',
+        weekEnd: '',
         monday: [],
         tuesday: [],
         wednesday: [],
@@ -29,6 +31,8 @@ const Stats = () => {
         saturday: [],
         sunday: []
     });
+
+    const [selectedDate, setSelectedDate] = useState(new Date());
 
     // const completedTasks = tasks.filter(task => task.status === '3');
 
@@ -55,10 +59,13 @@ const Stats = () => {
     };
 
     
-    const fetchWeeklyCompleted = async () => {
+    const fetchWeeklyCompleted = async (date) => {
+
+        const formattedDate = date.toLocaleDateString('en-CA');
+
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('/stats/api/weekly-completed/', {
+            const response = await fetch(`/stats/api/weekly-completed?date=${formattedDate}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -80,8 +87,8 @@ const Stats = () => {
 
     useEffect(() => {
         fetchStatistics();
-        fetchWeeklyCompleted();
-    }, []);
+        fetchWeeklyCompleted(selectedDate);
+    }, [selectedDate]);
 
 
     return (
@@ -119,6 +126,8 @@ const Stats = () => {
             </div>
 
             <div className='weekly-completed-container'>
+                <h3 style={{fontWeight: 600}}>Week</h3>
+                <h5>{`${weeklyCompleted.weekStart} - ${weeklyCompleted.weekEnd}`}</h5>
                 <StatsWeeklyContainer weeklyCompleted={weeklyCompleted}/>
             </div>
         
