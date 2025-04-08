@@ -6,6 +6,7 @@ import React, { useState, useEffect } from 'react';
 import StatsBox from './StatsBox';
 import StatsWeeklyContainer from './StatsWeeklyContainer';
 import '../../static/css/stats.css';
+import { addWeeks, subWeeks } from "date-fns";
 
 
 const Stats = () => {
@@ -35,6 +36,17 @@ const Stats = () => {
     const [selectedDate, setSelectedDate] = useState(new Date());
 
     // const completedTasks = tasks.filter(task => task.status === '3');
+
+    const goToPreviousWeek = () => {
+        const previousWeekStart = subWeeks(weeklyCompleted.weekStart, 1);
+        setSelectedDate(previousWeekStart);
+    };
+
+    const goToNextWeek = () => {
+        const nextWeekStart = addWeeks(weeklyCompleted.weekStart, 1);
+        setSelectedDate(nextWeekStart);
+    };
+
 
     const fetchStatistics = async () => {
         try {
@@ -127,7 +139,11 @@ const Stats = () => {
 
             <div className='weekly-completed-container'>
                 <h3 style={{fontWeight: 600}}>Week</h3>
-                <h5>{`${weeklyCompleted.weekStart} - ${weeklyCompleted.weekEnd}`}</h5>
+                <div className='completed-week'>
+                    <span className="week-change" onClick={goToPreviousWeek}>{"＜"}</span>
+                    <h5>{`${weeklyCompleted.weekStart} - ${weeklyCompleted.weekEnd}`}</h5>
+                    <span className="week-change" onClick={goToNextWeek}>{"＞"}</span>
+                </div>
                 <StatsWeeklyContainer weeklyCompleted={weeklyCompleted}/>
             </div>
         

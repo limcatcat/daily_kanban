@@ -85,8 +85,34 @@
     transition: transform 0.2s ease;
     width: 10rem;
     margin-top: 1rem;
+
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
 }
 
 .completed-weekday {
     padding-bottom: 1rem;
+}
+
+.completed-week {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.week-change {
+    cursor: pointer;
+    font-size: large;
+    margin-bottom: 0.5rem;
+    margin-left: 0.7rem;
+    margin-right: 0.7rem;
+}
+
+.week-change:hover {
+    background-color: rgb(232, 229, 229);
+    border-radius: 6px;
+    gap: 1rem;
 }
