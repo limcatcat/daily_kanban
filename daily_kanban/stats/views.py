@@ -182,7 +182,7 @@ class StatsAPIView(APIView):
 
 
         # 4. the percentage of completed tasks
-        open_tasks_count = Task.objects.filter(user=user, status__in=['1', '2'], archived=False).count()
+        open_tasks_count = Task.objects.filter(user=user, status__in=['1', '2'], archived=False, date_assigned__date__lte=timezone.now().date()).count()
         done_today_count = Task.objects.filter(user=user, status='3', date_done__date=timezone.now().date(), archived=False).count()
 
         print(f'today: {timezone.now().date()}, done_today_count: {done_today_count}')
